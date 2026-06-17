@@ -4,70 +4,44 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 <meta name="mobile-web-app-capable" content="yes"/>
-<meta name="apple-mobile-web-app-capable" content="yes"/>
 <title>My Daily Companion</title>
 <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Cinzel:wght@400;500&display=swap" rel="stylesheet"/>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 html,body{height:100%;background:#0d1b2a;font-family:'EB Garamond','Palatino Linotype',Georgia,serif;color:#f5e6c8;overscroll-behavior:none;}
 #app{min-height:100vh;max-width:900px;margin:0 auto;display:flex;flex-direction:column;background:linear-gradient(160deg,#0d1b2a 0%,#1a237e 55%,#0d1b2a 100%);}
-
-/* Header */
 #header{padding:22px 20px 16px;text-align:center;border-bottom:1px solid rgba(212,175,55,.3);background:rgba(0,0,0,.35);}
 #header .cross{font-size:15px;color:#d4af37;letter-spacing:14px;display:block;margin-bottom:6px;}
 #header h1{font-size:26px;font-weight:400;color:#f5e6c8;font-style:italic;letter-spacing:2px;margin-bottom:3px;}
 #header .sub{font-size:12px;color:#d4af37;letter-spacing:3px;text-transform:uppercase;font-family:'Cinzel',serif;}
 #header .badge{display:inline-block;margin-top:9px;padding:4px 14px;border-radius:20px;background:rgba(212,175,55,.12);border:1px solid rgba(212,175,55,.35);font-size:12px;color:#d4af37;letter-spacing:1px;font-family:'Cinzel',serif;}
-
-/* Nav */
 #nav{display:flex;border-bottom:1px solid rgba(212,175,55,.2);background:rgba(0,0,0,.3);}
 .nav-btn{flex:1;padding:14px 6px;background:transparent;border:none;border-bottom:2px solid transparent;color:#9e8c6e;font-size:13px;font-family:'Cinzel',serif;letter-spacing:1px;cursor:pointer;transition:all .2s;}
 .nav-btn.active{background:rgba(212,175,55,.15);border-bottom-color:#d4af37;color:#d4af37;}
-
-/* Content */
 #content{flex:1;overflow-y:auto;padding:22px 18px 60px;-webkit-overflow-scrolling:touch;}
 .section-title{font-size:11px;color:#9e8c6e;letter-spacing:3px;text-transform:uppercase;font-family:'Cinzel',serif;margin:26px 0 12px;border-bottom:1px solid rgba(212,175,55,.2);padding-bottom:7px;}
-
-/* Current hour card */
 .current-card{background:rgba(212,175,55,.08);border:1px solid rgba(212,175,55,.4);border-radius:16px;padding:22px;margin-bottom:22px;text-align:center;}
 .current-card .icon{font-size:36px;color:#d4af37;display:block;margin-bottom:8px;}
 .current-card .name{font-size:21px;font-style:italic;color:#f5e6c8;margin-bottom:3px;}
 .current-card .latin{font-size:13px;color:#9e8c6e;font-style:italic;margin-bottom:14px;}
 .current-card .greeting{font-size:17px;color:#d4af37;font-style:italic;line-height:1.7;margin-bottom:18px;}
-
-/* Hours grid */
 .hours-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;}
-.hour-tile{background:rgba(255,255,255,.04);border:1px solid rgba(212,175,55,.2);border-radius:12px;padding:15px 13px;cursor:pointer;transition:all .2s;}
+.hour-tile{background:rgba(255,255,255,.04);border:1px solid rgba(212,175,55,.2);border-radius:12px;padding:15px 13px;cursor:pointer;}
 .hour-tile.active{background:rgba(212,175,55,.14);border-color:#d4af37;}
-.hour-tile .t-icon{font-size:20px;color:#d4af37;margin-bottom:5px;}
-.hour-tile .t-name{font-size:14px;font-style:italic;color:#f5e6c8;margin-bottom:2px;}
-.hour-tile .t-time{font-size:12px;color:#9e8c6e;font-family:'Cinzel',serif;}
-
-/* Buttons */
 .gold-btn{background:rgba(212,175,55,.18);border:1px solid #d4af37;border-radius:10px;padding:11px 26px;color:#d4af37;font-size:15px;font-family:'Cinzel',serif;letter-spacing:1px;cursor:pointer;}
-.gold-btn:active{background:rgba(212,175,55,.3);}
-
-/* Chat */
 #chat-header{text-align:center;margin-bottom:16px;}
-#chat-header .ch-icon{font-size:36px;color:#d4af37;}
-#chat-header .ch-name{font-size:19px;font-style:italic;color:#d4af37;margin-top:2px;}
-#chat-header .ch-sub{font-size:11px;color:#9e8c6e;font-family:'Cinzel',serif;letter-spacing:1px;margin-top:3px;}
 #voice-toggle{margin-top:9px;background:transparent;border:1px solid rgba(212,175,55,.4);border-radius:20px;padding:5px 16px;color:#9e8c6e;font-size:12px;font-family:'Cinzel',serif;letter-spacing:1px;cursor:pointer;}
 #voice-toggle.on{border-color:#d4af37;color:#d4af37;}
-
 #chat-wrap{display:flex;flex-direction:column;height:calc(100vh - 310px);min-height:380px;}
 #chat-messages{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:14px;padding-bottom:6px;-webkit-overflow-scrolling:touch;}
 .msg-row{display:flex;flex-direction:column;}
 .msg-row.user{align-items:flex-end;}
 .msg-row.assistant{align-items:flex-start;}
 .sender-label{font-size:11px;color:#9e8c6e;font-family:'Cinzel',serif;letter-spacing:1px;margin-bottom:4px;}
-.avatar-row{display:flex;align-items:center;gap:7px;margin-bottom:4px;}
 .avatar{width:28px;height:28px;border-radius:50%;background:rgba(212,175,55,.18);border:1px solid rgba(212,175,55,.5);display:flex;align-items:center;justify-content:center;font-size:13px;color:#d4af37;flex-shrink:0;}
 .bubble{max-width:82%;font-size:17px;line-height:1.85;color:#f5e6c8;padding:13px 17px;}
 .bubble.user{background:rgba(212,175,55,.18);border:1px solid rgba(212,175,55,.4);border-radius:18px 18px 4px 18px;}
 .bubble.assistant{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:18px 18px 18px 4px;}
-
-/* Status bars */
 .status-bar{display:flex;align-items:center;gap:9px;padding:9px 13px;border-radius:10px;margin-bottom:8px;}
 .status-bar.speaking{background:rgba(212,175,55,.08);border:1px solid rgba(212,175,55,.3);}
 .status-bar.listening{background:rgba(239,83,80,.1);border:1px solid rgba(239,83,80,.3);}
@@ -75,63 +49,54 @@ html,body{height:100%;background:#0d1b2a;font-family:'EB Garamond','Palatino Lin
 .dot.gold{background:#d4af37;animation:pulse 1s infinite;}
 .dot.red{background:#ef5350;animation:pulse .6s infinite;}
 .stop-btn{margin-left:auto;background:transparent;border:1px solid rgba(212,175,55,.35);border-radius:7px;padding:4px 11px;color:#9e8c6e;font-size:12px;cursor:pointer;}
-
-/* Input row */
 #input-row{display:flex;gap:9px;margin-top:12px;align-items:flex-end;}
-#mic-btn{width:54px;height:54px;border-radius:50%;flex-shrink:0;border:2px solid #d4af37;background:rgba(212,175,55,.18);color:#d4af37;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .25s;}
+#mic-btn{width:54px;height:54px;border-radius:50%;flex-shrink:0;border:2px solid #d4af37;background:rgba(212,175,55,.18);color:#d4af37;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .25s;-webkit-user-select:none;user-select:none;}
 #mic-btn.listening{background:radial-gradient(circle,#c62828,#8b0000);border-color:#ef5350;color:#fff;box-shadow:0 0 18px rgba(239,83,80,.6);}
 #chat-input{flex:1;background:rgba(255,255,255,.07);border:1px solid rgba(212,175,55,.3);border-radius:12px;padding:13px 15px;color:#f5e6c8;font-size:17px;font-family:'EB Garamond',Georgia,serif;resize:none;line-height:1.6;outline:none;min-height:50px;}
 #chat-input:focus{border-color:rgba(212,175,55,.6);}
-#send-btn{width:54px;height:54px;border-radius:50%;flex-shrink:0;border:none;background:rgba(212,175,55,.75);color:#0d1b2a;font-size:19px;cursor:pointer;transition:all .2s;}
+#send-btn{width:54px;height:54px;border-radius:50%;flex-shrink:0;border:none;background:rgba(212,175,55,.75);color:#0d1b2a;font-size:19px;cursor:pointer;}
 #send-btn:disabled{background:rgba(212,175,55,.1);color:#5a4e38;cursor:not-allowed;}
 .disclaimer{font-size:11px;color:#5a4e38;text-align:center;margin-top:7px;font-style:italic;}
 .typing-indicator{color:#9e8c6e;font-style:italic;font-size:15px;}
-
-/* Prayer cards */
 .prayer-card{background:rgba(255,255,255,.04);border:1px solid rgba(212,175,55,.2);border-radius:14px;padding:19px 20px;margin-bottom:15px;}
 .prayer-card-title{font-size:19px;color:#d4af37;font-style:italic;margin-bottom:9px;}
 .prayer-card-text{font-size:17px;line-height:1.95;color:#c5b88a;white-space:pre-line;}
 .read-aloud-btn{margin-top:13px;background:transparent;border:1px solid rgba(212,175,55,.35);border-radius:8px;padding:7px 17px;color:#9e8c6e;font-size:13px;font-family:'Cinzel',serif;letter-spacing:1px;cursor:pointer;}
-
-/* Modal overlay */
 #modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:100;overflow-y:auto;padding:18px;}
 #modal-overlay.open{display:flex;align-items:flex-start;justify-content:center;}
 #modal{background:linear-gradient(160deg,#0d1b2a,#1a237e);border:1px solid rgba(212,175,55,.5);border-radius:20px;padding:28px 22px;max-width:600px;width:100%;position:relative;margin:auto;}
 #modal-close{position:absolute;top:14px;right:15px;background:transparent;border:none;color:#9e8c6e;font-size:22px;cursor:pointer;}
-.modal-icon{font-size:40px;color:#d4af37;text-align:center;display:block;margin-bottom:7px;}
-.modal-name{font-size:22px;font-style:italic;color:#f5e6c8;text-align:center;margin-bottom:3px;}
-.modal-latin{font-size:13px;color:#9e8c6e;font-style:italic;text-align:center;margin-bottom:20px;}
 .reading-box{background:rgba(212,175,55,.08);border:1px solid rgba(212,175,55,.25);border-radius:10px;padding:13px 17px;font-size:16px;font-style:italic;color:#d4af37;line-height:1.85;margin-bottom:15px;}
 .label-sm{font-size:11px;color:#9e8c6e;letter-spacing:3px;text-transform:uppercase;font-family:'Cinzel',serif;margin-bottom:7px;}
 .psalm-box{border-left:3px solid rgba(212,175,55,.4);padding:11px 17px;font-size:16px;color:#c5b88a;font-style:italic;line-height:1.85;margin-bottom:18px;}
 .prayer-text{font-size:17px;line-height:2.1;color:#f5e6c8;white-space:pre-line;margin-bottom:18px;}
 .modal-btns{display:flex;gap:11px;justify-content:center;flex-wrap:wrap;}
-
+#settings-overlay,#voice-overlay,#key-overlay{display:none;position:fixed;inset:0;z-index:200;align-items:center;justify-content:center;padding:24px;background:rgba(0,0,0,.88);}
+#voice-overlay{z-index:210;align-items:flex-start;overflow-y:auto;}
+#key-overlay{z-index:220;overflow-y:auto;}
+.overlay-box{background:linear-gradient(160deg,#0d1b2a,#1a237e);border:1px solid rgba(212,175,55,.5);border-radius:20px;padding:30px 24px;max-width:460px;width:100%;margin:auto;}
+#gear-btn{position:fixed;bottom:20px;right:18px;width:52px;height:52px;border-radius:50%;background:rgba(212,175,55,.18);border:2px solid rgba(212,175,55,.5);color:#d4af37;font-size:22px;cursor:pointer;z-index:50;box-shadow:0 2px 14px rgba(0,0,0,.5);}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.3)}}
 ::-webkit-scrollbar{width:4px;}
-::-webkit-scrollbar-track{background:transparent;}
 ::-webkit-scrollbar-thumb{background:rgba(212,175,55,.3);border-radius:4px;}
 </style>
 </head>
 <body>
 <div id="app">
   <div id="header">
-    <span class="cross">✦ ✝ ✦</span>
+    <span class="cross">&#10022; &#10013; &#10022;</span>
     <h1>My Daily Companion</h1>
     <p class="sub">Roman Catholic Prayer &amp; Reflection</p>
-    <span class="badge" id="context-badge">Loading…</span>
+    <span class="badge" id="context-badge">Loading&hellip;</span>
   </div>
-
   <nav id="nav">
     <button class="nav-btn active" data-tab="home">Hours</button>
     <button class="nav-btn" data-tab="chat">Fr. Thomas</button>
     <button class="nav-btn" data-tab="prayers">Prayers</button>
   </nav>
-
   <div id="content">
-    <!-- HOME TAB -->
     <div id="tab-home">
-      <div class="current-card" id="current-card">
+      <div class="current-card">
         <span class="icon" id="cur-icon"></span>
         <div class="name" id="cur-name"></div>
         <div class="latin" id="cur-latin"></div>
@@ -141,764 +106,74 @@ html,body{height:100%;background:#0d1b2a;font-family:'EB Garamond','Palatino Lin
       <div class="section-title">All Hours of the Day</div>
       <div class="hours-grid" id="hours-grid"></div>
     </div>
-
-    <!-- CHAT TAB -->
     <div id="tab-chat" style="display:none;">
       <div id="chat-header">
-        <div class="ch-icon">✝</div>
-        <div class="ch-name">Father Thomas</div>
-        <div class="ch-sub">Your spiritual companion</div>
-        <button id="voice-toggle" class="on">🔊 Voice On</button>
+        <div style="font-size:36px;color:#d4af37;">&#10013;</div>
+        <div style="font-size:19px;font-style:italic;color:#d4af37;margin-top:2px;">Father Thomas</div>
+        <div style="font-size:11px;color:#9e8c6e;font-family:'Cinzel',serif;letter-spacing:1px;margin-top:3px;">Your spiritual companion</div>
+        <button id="voice-toggle" class="on">&#128266; Voice On</button>
       </div>
       <div id="chat-wrap">
         <div id="chat-messages"></div>
         <div id="speaking-bar" class="status-bar speaking" style="display:none;">
           <div class="dot gold"></div>
-          <span style="font-size:14px;color:#d4af37;font-style:italic;">Father Thomas is speaking…</span>
+          <span style="font-size:14px;color:#d4af37;font-style:italic;">Father Thomas is speaking&hellip;</span>
           <button class="stop-btn" id="stop-speak-btn">Stop</button>
         </div>
         <div id="listening-bar" class="status-bar listening" style="display:none;">
           <div class="dot red"></div>
-          <span style="font-size:14px;color:#ef9a9a;font-style:italic;">Listening… speak now</span>
+          <span style="font-size:14px;color:#ef9a9a;font-style:italic;">Listening&hellip; speak now</span>
         </div>
         <div id="input-row">
-          <button id="mic-btn" title="Tap to speak">🎤</button>
-          <textarea id="chat-input" rows="2" placeholder="Tap 🎤 to speak, or type here…"></textarea>
-          <button id="send-btn" disabled>✦</button>
+          <button id="mic-btn" title="Tap to speak">&#127908;</button>
+          <textarea id="chat-input" rows="2" placeholder="Tap mic to speak, or type here&hellip;"></textarea>
+          <button id="send-btn" disabled>&#10022;</button>
         </div>
         <div class="disclaimer">For sacramental needs, please contact your local parish.</div>
       </div>
     </div>
-
-    <!-- PRAYERS TAB -->
     <div id="tab-prayers" style="display:none;">
-      <div style="text-align:center;margin-bottom:22px;font-size:15px;font-style:italic;color:#9e8c6e;">
-        "Pray without ceasing." — 1 Thessalonians 5:17
-      </div>
+      <div style="text-align:center;margin-bottom:22px;font-size:15px;font-style:italic;color:#9e8c6e;">"Pray without ceasing." &mdash; 1 Thessalonians 5:17</div>
       <div id="prayers-list"></div>
     </div>
   </div>
 </div>
 
-<!-- MODAL -->
+<!-- MODALS -->
 <div id="modal-overlay">
   <div id="modal">
-    <button id="modal-close">✕</button>
-    <span class="modal-icon" id="m-icon"></span>
-    <div class="modal-name" id="m-name"></div>
-    <div class="modal-latin" id="m-latin"></div>
+    <button id="modal-close">&#x2715;</button>
+    <span style="font-size:40px;color:#d4af37;text-align:center;display:block;margin-bottom:7px;" id="m-icon"></span>
+    <div style="font-size:22px;font-style:italic;color:#f5e6c8;text-align:center;margin-bottom:3px;" id="m-name"></div>
+    <div style="font-size:13px;color:#9e8c6e;font-style:italic;text-align:center;margin-bottom:20px;" id="m-latin"></div>
     <div class="reading-box" id="m-reading"></div>
     <div class="label-sm">Psalm</div>
     <div class="psalm-box" id="m-psalm"></div>
     <div class="label-sm" style="margin-top:16px;">Prayer</div>
     <div class="prayer-text" id="m-prayer"></div>
     <div class="modal-btns">
-      <button class="gold-btn" id="m-read-btn">🔊 Read Aloud</button>
+      <button class="gold-btn" id="m-read-btn">&#128266; Read Aloud</button>
       <button class="gold-btn" id="m-chat-btn">Discuss with Fr. Thomas</button>
     </div>
   </div>
 </div>
 
-<script>
-// ── DATA ────────────────────────────────────────────────────────────────────
-const HOURS = [
-  { id:"matins", name:"Matins / Office of Readings", latinName:"Officium Lectionis", time:"6:00 AM", hour:6, icon:"✦",
-    greeting:"Domine, labia mea aperies — Lord, open my lips.",
-    prayer:"O God, come to my assistance. O Lord, make haste to help me.\nGlory be to the Father, and to the Son, and to the Holy Spirit,\nas it was in the beginning, is now, and ever shall be, world without end. Amen.\n\nLord, this morning I offer You my heart, my mind, and my day. May Your light guide my path and Your love sustain my soul. I ask for the intercession of the Blessed Virgin Mary and all the saints. Amen.",
-    psalm:"Psalm 95 — Come, let us sing to the Lord; let us shout for joy to the Rock of our salvation. Let us come before His presence with thanksgiving.",
-    reading:'"I am the light of the world. Whoever follows me will never walk in darkness." — John 8:12' },
-  { id:"lauds", name:"Lauds — Morning Prayer", latinName:"Laudes Matutinae", time:"7:00 AM", hour:7, icon:"☀",
-    greeting:"Blessed are You, Lord our God, King of the universe.",
-    prayer:"Father of light, in whom there is no change or shadow,\nYou bestow on all good gifts and flood the world with light.\nFill our lives with Your glory and Your peace.\nMay this morning be holy, good, and peaceful,\nas we walk in Your presence throughout this day. Amen.",
-    psalm:"Psalm 63 — O God, You are my God, I earnestly seek You; my soul thirsts for You, my whole body longs for You.",
-    reading:'"This is the day the Lord has made; let us rejoice and be glad in it." — Psalm 118:24' },
-  { id:"terce", name:"Terce — Mid-Morning Prayer", latinName:"Hora Tertia", time:"9:00 AM", hour:9, icon:"✿",
-    greeting:"Come, Holy Spirit, fill the hearts of Your faithful.",
-    prayer:"Lord God, may the Holy Spirit kindle in our hearts the fire of Your love\nand strengthen us for the work ahead.\nGuide our hands, our words, and our intentions\nthat all we do this morning may be for Your greater glory. Amen.",
-    psalm:"Psalm 119 — Teach me, Lord, the way of Your decrees, that I may follow it to the end.",
-    reading:'"Ask and it will be given to you; seek and you will find; knock and the door will be opened." — Matthew 7:7' },
-  { id:"sext", name:"Sext — Midday Prayer", latinName:"Hora Sexta", time:"12:00 PM", hour:12, icon:"✦",
-    greeting:"At midday we pause to remember Your presence, Lord.",
-    prayer:"O Lord, as the sun reaches its height,\nwe offer You this moment of rest and recollection.\nForgive us our failings of the morning.\nRefresh our spirit and renew our purpose,\nthat the remainder of this day may be lived in Your grace. Amen.",
-    psalm:"Psalm 23 — The Lord is my shepherd; I shall not want. He makes me lie down in green pastures. He leads me beside still waters.",
-    reading:'"Come to me, all you who are weary and burdened, and I will give you rest." — Matthew 11:28' },
-  { id:"none", name:"None — Afternoon Prayer", latinName:"Hora Nona", time:"3:00 PM", hour:15, icon:"✝",
-    greeting:"At this hour, Christ breathed His last for us.",
-    prayer:"Lord Jesus, at this hour You stretched out Your arms upon the Cross\nand offered Your life for our salvation.\nMay the mystery of Your Passion fill our hearts with gratitude,\nand may we carry our own crosses with faith and courage.\nHave mercy on us and on the whole world. Amen.",
-    psalm:"Psalm 22 — My God, my God, why have You forsaken me? But You are the Holy One, enthroned on the praises of Israel.",
-    reading:'"Greater love has no one than this: to lay down one\'s life for one\'s friends." — John 15:13' },
-  { id:"vespers", name:"Vespers — Evening Prayer", latinName:"Vesperae", time:"6:00 PM", hour:18, icon:"★",
-    greeting:"Remain with us, Lord, for evening draws near.",
-    prayer:"O Gracious God, as evening falls we return to You in prayer.\nWe thank You for the gifts of this day — for life, for breath, for love.\nForgive us where we fell short, and bless those we love.\nMay Your angels watch over us through the night,\nand may the Blessed Virgin Mary intercede for us always. Amen.\n\nMagnificat: My soul proclaims the greatness of the Lord;\nmy spirit rejoices in God my Savior.",
-    psalm:"Psalm 141 — Let my prayer be counted as incense before You, and the lifting up of my hands as the evening sacrifice.",
-    reading:'"Peace I leave with you; my peace I give to you. Not as the world gives do I give to you." — John 14:27' },
-  { id:"compline", name:"Compline — Night Prayer", latinName:"Completorium", time:"9:00 PM", hour:21, icon:"☽",
-    greeting:"Into Your hands, Lord, I commend my spirit.",
-    prayer:"Lord, grant us a restful night and a peaceful death.\nProtect us from all evil and danger this night.\nMay Your holy angels surround us,\nand may we wake to praise You in the morning light.\n\nHail, Holy Queen, Mother of Mercy,\nour life, our sweetness, and our hope.\nTo thee do we cry, poor banished children of Eve;\nto thee do we send up our sighs,\nmourning and weeping in this vale of tears. Amen.",
-    psalm:"Psalm 91 — He who dwells in the shelter of the Most High will rest in the shadow of the Almighty. I will say of the Lord, He is my refuge and my fortress.",
-    reading:'"I will lie down and sleep in peace, for You alone, Lord, make me dwell in safety." — Psalm 4:8' }
-];
-
-const PRAYERS = [
-  { title:"The Rosary — Joyful Mysteries (Monday & Saturday)",
-    text:"Begin with the Apostles Creed, then one Our Father, three Hail Marys, and one Glory Be.\n\nFirst Mystery: The Annunciation\nSecond Mystery: The Visitation\nThird Mystery: The Nativity\nFourth Mystery: The Presentation in the Temple\nFifth Mystery: The Finding of Jesus in the Temple\n\nFor each mystery: one Our Father, ten Hail Marys, one Glory Be, and the Fatima Prayer:\nO my Jesus, forgive us our sins, save us from the fires of Hell, lead all souls to Heaven, especially those in most need of Thy mercy." },
-  { title:"Divine Mercy Chaplet (3:00 PM daily)",
-    text:"On the Our Father beads:\nEternal Father, I offer You the Body and Blood, Soul and Divinity of Your dearly beloved Son, in atonement for our sins and those of the whole world.\n\nOn the Hail Mary beads, ten times:\nFor the sake of His sorrowful Passion, have mercy on us and on the whole world.\n\nConclude three times:\nHoly God, Holy Mighty One, Holy Immortal One, have mercy on us and on the whole world." },
-  { title:"Morning Offering",
-    text:"O Jesus, through the Immaculate Heart of Mary,\nI offer You my prayers, works, joys and sufferings\nof this day in union with the Holy Sacrifice of the Mass\nthroughout the world.\nI offer them for all the intentions of Your Sacred Heart:\nthe salvation of souls, reparation for sin,\nand the reunion of all Christians. Amen." },
-  { title:"Act of Contrition",
-    text:"O my God, I am heartily sorry for having offended Thee,\nand I detest all my sins because of Thy just punishments,\nbut most of all because they offend Thee, my God,\nwho art all good and deserving of all my love.\nI firmly resolve, with the help of Thy grace,\nto sin no more and to avoid the near occasions of sin. Amen." },
-  { title:"Prayer to Saint Michael",
-    text:"Saint Michael the Archangel, defend us in battle.\nBe our protection against the wickedness and snares of the devil.\nMay God rebuke him, we humbly pray;\nand do Thou, O Prince of the Heavenly Host,\nby the Power of God, cast into Hell Satan\nand all the evil spirits who roam through the world\nseeking the ruin of souls. Amen." },
-  { title:"Memorare",
-    text:"Remember, O most gracious Virgin Mary,\nthat never was it known that anyone who fled to Thy protection,\nimplored Thy help, or sought Thy intercession, was left unaided.\nInspired by this confidence, I fly unto Thee, O Virgin of virgins, my Mother;\nto Thee do I come, before Thee I stand, sinful and sorrowful.\nO Mother of the Word Incarnate, despise not my petitions,\nbut in Thy mercy hear and answer me. Amen." }
-];
-
-// ── API KEY SETUP ────────────────────────────────────────────────────────────
-// We store the key in localStorage so she only enters it once.
-function getApiKey() {
-  return localStorage.getItem('fr_thomas_key') || '';
-}
-function saveApiKey(k) {
-  localStorage.setItem('fr_thomas_key', k.trim());
-}
-
-// ── STATE ───────────────────────────────────────────────────────────────────
-let currentTab = 'home';
-let messages = [{role:'assistant', content:"Pax et bonum — Peace and goodness to you, dear friend. I am Father Thomas, and I am so glad you are here. How are you today? Is there something on your heart, a prayer you would like to offer, or perhaps a passage of Scripture you would like to reflect on together?"}];
-let autoSpeak = true;
-let isListening = false;
-let isSpeaking = false;
-let recognition = null;
-let currentTranscript = '';
-let pendingHour = null;
-
-// ── LITURGICAL CONTEXT ───────────────────────────────────────────────────────
-function getLitCtx() {
-  const now = new Date(), m = now.getMonth()+1, d = now.getDay();
-  let season = 'Ordinary Time';
-  if (m===12 || (m===11 && now.getDate()>=27)) season='Advent';
-  else if (m===1 || (m===2 && now.getDate()<=2)) season='Christmas Season';
-  else if (m>=2 && m<=4) season='Lent';
-  return { season, dayName:['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][d] };
-}
-
-function getCurrentHour() {
-  const h = new Date().getHours();
-  let active = HOURS[HOURS.length-1];
-  for (const hr of HOURS) { if (h >= hr.hour) active=hr; else break; }
-  return active;
-}
-
-const ctx = getLitCtx();
-const curHour = getCurrentHour();
-
-// ── SYSTEM PROMPT ────────────────────────────────────────────────────────────
-function buildSystem() {
-  return `You are Father Thomas, a warm, gentle, and deeply learned Roman Catholic priest speaking with an elderly woman of deep faith who uses this app for daily spiritual companionship and prayer.
-
-Today is ${ctx.dayName}, in the season of ${ctx.season}.
-
-Your role: Be a compassionate spiritual companion and listener. Guide her through Catholic prayer, Scripture, and tradition. Encourage her, drawing on the Catechism, lives of saints, and Church teaching. Be patient, unhurried, and never condescending.
-
-Guidelines:
-- Keep responses warm and conversational. She may be lonely or seeking comfort.
-- Reference specific saints, Scripture passages, and prayers when appropriate.
-- Use gentle, accessible language. Never academic or cold.
-- If she shares a worry or grief, respond pastorally before offering advice.
-- Occasionally use Latin phrases with their English translation.
-- Always end with a brief blessing or encouraging word.
-- Never deny Church teaching. Handle difficult questions with pastoral sensitivity.
-- Gently encourage her to contact her parish for sacramental needs.
-- Keep responses to 3 to 4 paragraphs. She will be listening, so speak naturally and warmly.
-- IMPORTANT: Your response will be read aloud. Write in flowing natural spoken sentences only. No bullet points, no numbered lists, no special symbols or characters.`;
-}
-
-// ── TTS ──────────────────────────────────────────────────────────────────────
-// ── TTS CORE — ElevenLabs primary, Web Speech fallback ───────────────────────
-
-const EL_VOICES = [
-  { id: 'huSf6WJX1X9lGY6I9CfQ', name: 'Father Thomas (selected)' },
-  { id: 'onwK4e9ZLuTAKqWW03F9', name: 'Daniel (calm, British)' },
-  { id: 'TX3LPaxmHKxFdv7VOQHJ', name: 'Liam (warm, Irish)' },
-  { id: 'XB0fDUnXU5powFXDhCwa', name: 'Thomas (deep, authoritative)' },
-  { id: 'nPczCjzI2devNBz1zQrb', name: 'Brian (measured, American)' },
-  { id: 'N2lVS1w4EtoT3dr4eOWO', name: 'Callum (resonant, British)' },
-  { id: 'CwhRBWXzGAHq8TQ4Fs17', name: 'Roger (warm, distinguished)' },
-];
-
-function getElKey()       { return localStorage.getItem('el_key') || ''; }
-function saveElKey(k)     { localStorage.setItem('el_key', k.trim()); }
-function getElVoiceId()   { return localStorage.getItem('el_voice_id') || EL_VOICES[0].id; }
-function saveElVoiceId(v) { localStorage.setItem('el_voice_id', v); }
-
-function cleanForSpeech(text) {
-  var t = text || "";
-  var specials = ["✦","✝","★","☀","☽","✿","•"];
-  specials.forEach(function(s){ t = t.split(s).join(" "); });
-  t = t.split("–").join(", ").split("—").join(", ").split("-").join(", ");
-  t = t.split("\n").join(". ");
-  while (t.indexOf("  ") !== -1) { t = t.split("  ").join(" "); }
-  return t.trim();
-}
-
-function speakWebSpeech(clean, onEnd) {
-  if (!window.speechSynthesis) { if (onEnd) onEnd(); return; }
-  window.speechSynthesis.cancel();
-  const sentences = clean.match(/[^.!?]+[.!?]+/g) || [clean];
-  let i = 0;
-  isSpeaking = true; showSpeakingBar(true);
-  function next() {
-    if (i >= sentences.length) {
-      isSpeaking = false; showSpeakingBar(false); if (onEnd) onEnd(); return;
-    }
-    const u = new SpeechSynthesisUtterance(sentences[i++].trim());
-    u.rate = 0.82; u.pitch = 0.80; u.volume = 1.0;
-    u.onend = next; u.onerror = next;
-    window.speechSynthesis.speak(u);
-  }
-  next();
-}
-
-async function speakElevenLabs(clean, onEnd) {
-  const key = getElKey();
-  const voiceId = getElVoiceId();
-  // Add a short timeout so fetch can't freeze the UI indefinitely
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 15000);
-  try {
-    const res = await fetch('https://api.elevenlabs.io/v1/text-to-speech/' + voiceId, {
-      method: 'POST',
-      signal: controller.signal,
-      headers: { 'xi-api-key': key, 'Content-Type': 'application/json', 'Accept': 'audio/mpeg' },
-      body: JSON.stringify({
-        text: clean,
-        model_id: 'eleven_multilingual_v2',
-        voice_settings: { stability: 0.75, similarity_boost: 0.85, style: 0.20, use_speaker_boost: true }
-      })
-    });
-    clearTimeout(timer);
-    if (!res.ok) throw new Error('EL ' + res.status);
-    const blob = await res.blob();
-    const url = URL.createObjectURL(blob);
-    const audio = new Audio(url);
-    window._frThomasAudio = audio;
-    // Only show speaking bar once audio is actually ready to play
-    isSpeaking = true; showSpeakingBar(true);
-    const span = document.querySelector('#speaking-bar span');
-    if (span) span.textContent = 'Father Thomas is speaking…';
-    audio.onended = () => { isSpeaking = false; showSpeakingBar(false); URL.revokeObjectURL(url); if (onEnd) onEnd(); };
-    audio.onerror = () => { isSpeaking = false; showSpeakingBar(false); URL.revokeObjectURL(url); if (onEnd) onEnd(); };
-    audio.play();
-  } catch(e) {
-    clearTimeout(timer);
-    console.error('ElevenLabs error:', e);
-    isSpeaking = false; showSpeakingBar(false);
-    // Don't fall back to web speech — just call onEnd so the app stays responsive
-    if (onEnd) onEnd();
-  }
-}
-
-function speak(text, onEnd) {
-  const clean = cleanForSpeech(text);
-  if (getElKey()) {
-    speakElevenLabs(clean, onEnd);
-  } else {
-    // No ElevenLabs key — skip TTS silently, don't block UI
-    if (onEnd) onEnd();
-  }
-}
-
-function stopSpeaking() {
-  // Stop ElevenLabs audio if playing
-  if (window._frThomasAudio) {
-    window._frThomasAudio.pause();
-    window._frThomasAudio.currentTime = 0;
-    window._frThomasAudio = null;
-  }
-  // Stop Web Speech fallback
-  window.speechSynthesis && window.speechSynthesis.cancel();
-  isSpeaking = false; showSpeakingBar(false);
-}
-
-function showSpeakingBar(show) {
-  document.getElementById('speaking-bar').style.display = show ? 'flex' : 'none';
-}
-
-// ── SPEECH RECOGNITION ───────────────────────────────────────────────────────
-const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-if (SpeechRecognition) {
-  recognition = new SpeechRecognition();
-  recognition.continuous = false;
-  recognition.interimResults = true;
-  recognition.lang = 'en-US';
-  recognition.onresult = (e) => {
-    currentTranscript = Array.from(e.results).map(r=>r[0].transcript).join('');
-    document.getElementById('chat-input').value = currentTranscript;
-    updateSendBtn();
-  };
-  recognition.onend = () => {
-    isListening = false;
-    document.getElementById('mic-btn').classList.remove('listening');
-    document.getElementById('listening-bar').style.display = 'none';
-    if (currentTranscript.trim()) {
-      setTimeout(() => sendMessage(currentTranscript.trim()), 300);
-    }
-  };
-  recognition.onerror = (e) => {
-    isListening = false;
-    document.getElementById('mic-btn').classList.remove('listening');
-    document.getElementById('listening-bar').style.display = 'none';
-    console.error('Speech recognition error:', e.error);
-    // If error is network (file:// protocol issue), show instruction
-    if (e.error === 'network' || e.error === 'service-not-allowed' || e.error === 'not-allowed') {
-      var bar = document.getElementById('listening-bar');
-      bar.style.display = 'flex';
-      bar.style.background = 'rgba(239,83,80,.1)';
-      bar.querySelector('span').textContent = 'Microphone blocked. See setup note below.';
-      setTimeout(() => { bar.style.display = 'none'; }, 4000);
-    }
-  };
-} else {
-  document.getElementById('mic-btn').style.display = 'none';
-}
-
-function toggleMic() {
-  if (!recognition) {
-    alert('Speech recognition is not available in this browser.');
-    return;
-  }
-  if (isListening) {
-    recognition.stop();
-    isListening = false;
-    document.getElementById('mic-btn').classList.remove('listening');
-    document.getElementById('listening-bar').style.display = 'none';
-  } else {
-    stopSpeaking();
-    currentTranscript = '';
-    document.getElementById('chat-input').value = '';
-    try {
-      recognition.abort(); // reset any stuck state
-    } catch(e) {}
-    setTimeout(function() {
-      try {
-        isListening = true;
-        document.getElementById('mic-btn').classList.add('listening');
-        document.getElementById('listening-bar').style.display = 'flex';
-        recognition.start();
-      } catch(e) {
-        isListening = false;
-        document.getElementById('mic-btn').classList.remove('listening');
-        document.getElementById('listening-bar').style.display = 'none';
-        console.error('Mic start error:', e);
-      }
-    }, 100);
-  }
-}
-
-// ── CHAT ─────────────────────────────────────────────────────────────────────
-function renderMessages() {
-  const el = document.getElementById('chat-messages');
-  el.innerHTML = '';
-  messages.forEach(msg => {
-    const row = document.createElement('div');
-    row.className = 'msg-row ' + msg.role;
-    if (msg.role === 'assistant') {
-      row.innerHTML = `<div class="avatar-row"><div class="avatar">✝</div><span class="sender-label">Father Thomas</span></div><div class="bubble assistant">${msg.content.replace(/\n/g,'<br>')}</div>`;
-    } else {
-      row.innerHTML = `<div class="sender-label">You</div><div class="bubble user">${msg.content.replace(/\n/g,'<br>')}</div>`;
-    }
-    el.appendChild(row);
-  });
-  el.scrollTop = el.scrollHeight;
-}
-
-function showTyping(show) {
-  let ind = document.getElementById('typing-ind');
-  if (show && !ind) {
-    ind = document.createElement('div');
-    ind.id='typing-ind';
-    ind.className='msg-row assistant';
-    ind.innerHTML='<div class="avatar-row"><div class="avatar">✝</div></div><div class="typing-indicator">Father Thomas is composing a response…</div>';
-    document.getElementById('chat-messages').appendChild(ind);
-    document.getElementById('chat-messages').scrollTop = 99999;
-  } else if (!show && ind) {
-    ind.remove();
-  }
-}
-
-async function sendMessage(text) {
-  const content = (text || document.getElementById('chat-input').value).trim();
-  if (!content) return;
-  if (isListening) recognition.stop();
-  stopSpeaking();
-  messages.push({role:'user', content});
-  document.getElementById('chat-input').value = '';
-  currentTranscript = '';
-  updateSendBtn();
-  renderMessages();
-  showTyping(true);
-  document.getElementById('send-btn').disabled = true;
-
-  const apiKey = getApiKey();
-  if (!apiKey) {
-    showTyping(false);
-    messages.push({role:'assistant', content:'I need a small piece of setup before we can speak together. Please tap the gear button below and enter your Anthropic API key. Your family can help with this. God bless you while we sort this out.'});
-    renderMessages();
-    document.getElementById('send-btn').disabled = false;
-    showKeySetup();
-    return;
-  }
-
-  try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method:'POST',
-      headers:{
-        'Content-Type':'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version':'2023-06-01',
-        'anthropic-dangerous-direct-browser-access':'true'
-      },
-      body:JSON.stringify({
-        model:'claude-sonnet-4-6',
-        max_tokens:1000,
-        system:buildSystem(),
-        messages
-      })
-    });
-    const data = await res.json();
-    if (data.error) { throw new Error(data.error.message || 'API error'); }
-    const reply = (data.content||[]).find(b=>b.type==='text')?.text || 'Forgive me, I was unable to respond just now. Please try again.';
-    showTyping(false);
-    messages.push({role:'assistant', content:reply});
-    renderMessages();
-    if (autoSpeak) speak(reply);
-  } catch(e) {
-    showTyping(false);
-    var errDetail = e && e.message ? e.message : String(e);
-    var errMsg = 'Connection error: ' + errDetail;
-    messages.push({role:'assistant', content:errMsg});
-    renderMessages();
-    console.error('API error full:', e);
-  }
-  document.getElementById('send-btn').disabled = false;
-}
-
-function updateSendBtn() {
-  document.getElementById('send-btn').disabled = !document.getElementById('chat-input').value.trim();
-}
-
-// ── TABS ─────────────────────────────────────────────────────────────────────
-let chatGreetingSpoken = false;
-function switchTab(tab) {
-  currentTab = tab;
-  ['home','chat','prayers'].forEach(t => {
-    document.getElementById('tab-'+t).style.display = t===tab ? 'block' : 'none';
-    document.querySelector(`.nav-btn[data-tab="${t}"]`).classList.toggle('active', t===tab);
-  });
-  // Auto-speak greeting the first time she opens the chat tab
-  if (tab === 'chat' && !chatGreetingSpoken && autoSpeak && getElKey()) {
-    chatGreetingSpoken = true;
-    setTimeout(() => speak(messages[0].content), 600);
-  }
-}
-
-// ── MODAL ────────────────────────────────────────────────────────────────────
-function openHour(hr) {
-  pendingHour = hr;
-  document.getElementById('m-icon').textContent = hr.icon;
-  document.getElementById('m-name').textContent = hr.name;
-  document.getElementById('m-latin').textContent = hr.latinName + ' · ' + hr.time;
-  document.getElementById('m-reading').textContent = hr.reading;
-  document.getElementById('m-psalm').textContent = hr.psalm;
-  document.getElementById('m-prayer').textContent = hr.prayer;
-  document.getElementById('modal-overlay').classList.add('open');
-}
-
-function closeModal() {
-  document.getElementById('modal-overlay').classList.remove('open');
-  stopSpeaking();
-}
-
-// ── BUILD HOME TAB ───────────────────────────────────────────────────────────
-function buildHome() {
-  document.getElementById('context-badge').textContent = ctx.dayName + ' · Season of ' + ctx.season;
-  document.getElementById('cur-icon').textContent = curHour.icon;
-  document.getElementById('cur-name').textContent = curHour.name;
-  document.getElementById('cur-latin').textContent = curHour.latinName + ' · ' + curHour.time;
-  document.getElementById('cur-greeting').textContent = '"' + curHour.greeting + '"';
-  document.getElementById('cur-open-btn').onclick = () => openHour(curHour);
-
-  const grid = document.getElementById('hours-grid');
-  HOURS.forEach(hr => {
-    const tile = document.createElement('div');
-    tile.className = 'hour-tile' + (hr.id===curHour.id ? ' active' : '');
-    tile.innerHTML = `<div class="t-icon">${hr.icon}</div><div class="t-name">${hr.name}</div><div class="t-time">${hr.time}</div>`;
-    tile.onclick = () => openHour(hr);
-    grid.appendChild(tile);
-  });
-}
-
-// ── BUILD PRAYERS TAB ────────────────────────────────────────────────────────
-function buildPrayers() {
-  const list = document.getElementById('prayers-list');
-  PRAYERS.forEach(p => {
-    const card = document.createElement('div');
-    card.className = 'prayer-card';
-    card.innerHTML = `<div class="prayer-card-title">${p.title}</div><div class="prayer-card-text">${p.text}</div><button class="read-aloud-btn">🔊 Read Aloud</button>`;
-    card.querySelector('.read-aloud-btn').onclick = () => speak(p.text);
-    list.appendChild(card);
-  });
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-// ── EVENT WIRING (runs after DOM is ready) ───────────────────────────────────
-document.querySelectorAll('.nav-btn').forEach(btn => {
-  btn.addEventListener('click', () => switchTab(btn.dataset.tab));
-});
-
-(function() {
-  var micBtn = document.getElementById('mic-btn');
-  var tapped = false;
-  micBtn.addEventListener('touchend', function(e) {
-    e.preventDefault();
-    tapped = true;
-    toggleMic();
-  });
-  micBtn.addEventListener('click', function(e) {
-    if (!tapped) toggleMic();
-    tapped = false;
-  });
-})();
-
-document.getElementById('chat-input').addEventListener('input', updateSendBtn);
-document.getElementById('chat-input').addEventListener('keydown', e => {
-  if (e.key==='Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
-});
-
-document.getElementById('send-btn').addEventListener('click', () => sendMessage());
-
-document.getElementById('stop-speak-btn').addEventListener('click', stopSpeaking);
-
-document.getElementById('voice-toggle').addEventListener('click', () => {
-  autoSpeak = !autoSpeak;
-  const btn = document.getElementById('voice-toggle');
-  btn.textContent = autoSpeak ? '🔊 Voice On' : '🔇 Voice Off';
-  btn.classList.toggle('on', autoSpeak);
-  if (!autoSpeak) stopSpeaking();
-});
-
-document.getElementById('modal-close').addEventListener('click', closeModal);
-document.getElementById('modal-overlay').addEventListener('click', e => {
-  if (e.target===document.getElementById('modal-overlay')) closeModal();
-});
-document.getElementById('m-read-btn').addEventListener('click', () => {
-  if (pendingHour) speak(pendingHour.prayer);
-});
-document.getElementById('m-chat-btn').addEventListener('click', () => {
-  closeModal();
-  switchTab('chat');
-});
-
-// ── INIT ─────────────────────────────────────────────────────────────────────
-buildHome();
-buildPrayers();
-renderMessages();
-
-// Greeting spoken on first visit to chat tab (see switchTab)
-
-// ── KEY SETUP ────────────────────────────────────────────────────────────────
-function showKeySetup() {
-  const overlay = document.getElementById('key-overlay');
-  overlay.style.display = 'flex';
-  const existingAnth = getApiKey();
-  const existingEl = getElKey();
-  if (existingAnth) document.getElementById('key-input').value = existingAnth;
-  if (existingEl) document.getElementById('el-key-input').value = existingEl;
-  document.getElementById('key-status').textContent = '';
-}
-
-// gear-btn now handled in settings block below
-
-document.getElementById('key-save-btn').addEventListener('click', () => {
-  const anthVal = document.getElementById('key-input').value.trim();
-  const elVal   = document.getElementById('el-key-input').value.trim();
-  let msg = '';
-  if (anthVal) {
-    if (!anthVal.startsWith('sk-')) {
-      document.getElementById('key-status').textContent = 'Anthropic key should start with sk-ant-';
-      return;
-    }
-    saveApiKey(anthVal);
-    msg += 'Anthropic key saved. ';
-  }
-  if (elVal) {
-    saveElKey(elVal);
-    msg += 'ElevenLabs key saved.';
-  }
-  if (!msg) {
-    document.getElementById('key-status').textContent = 'Please enter at least one key.';
-    return;
-  }
-  document.getElementById('key-status').textContent = msg + ' All set!';
-  setTimeout(() => { document.getElementById('key-overlay').style.display='none'; }, 1400);
-});
-
-document.getElementById('key-cancel-btn').addEventListener('click', () => {
-  document.getElementById('key-overlay').style.display = 'none';
-});
-
-// Migrate: ensure the preferred voice is always Father Thomas unless user changed it
-(function() {
-  const saved = localStorage.getItem('el_voice_id');
-  // If nothing saved yet, pre-set to Father Thomas
-  if (!saved) localStorage.setItem('el_voice_id', 'huSf6WJX1X9lGY6I9CfQ');
-})();
-
-// Show key setup on first load only if Anthropic key missing
-if (!getApiKey()) {
-  setTimeout(showKeySetup, 1000);
-}
-
-
-// ── SETTINGS & VOICE PICKER ──────────────────────────────────────────────────
-let _previewVoice = null;
-
-// getSavedVoiceName/saveVoiceName defined in TTS core above
-// voice selection handled by getElVoiceId() in speakElevenLabs()
-
-// Settings menu
-function showSettings() {
-  document.getElementById('settings-overlay').style.display = 'flex';
-}
-function hideSettings() {
-  document.getElementById('settings-overlay').style.display = 'none';
-}
-
-document.getElementById('gear-btn').addEventListener('click', showSettings);
-document.getElementById('settings-close-btn').addEventListener('click', hideSettings);
-document.getElementById('settings-overlay').addEventListener('click', function(e) {
-  if (e.target === this) hideSettings();
-});
-
-document.getElementById('settings-key-btn').addEventListener('click', () => {
-  hideSettings();
-  showKeySetup();
-});
-
-document.getElementById('settings-voice-btn').addEventListener('click', () => {
-  hideSettings();
-  showVoicePicker();
-});
-
-// Voice picker
-function showVoicePicker() {
-  const engVoices = EL_VOICES; // use our curated ElevenLabs voice list
-  const list = document.getElementById('voice-list');
-  list.innerHTML = '';
-  const saved = getSavedVoiceName();
-  _previewVoice = null;
-  document.getElementById('voice-status').textContent = '';
-
-  if (!engVoices.length) {
-    list.innerHTML = '<div style="color:#9e8c6e;font-style:italic;text-align:center;padding:20px;">No voices available.</div>';
-  } else {
-    const elKey = getElKey();
-    if (!elKey) {
-      list.innerHTML = '<div style="color:#ef9a9a;font-style:italic;text-align:center;padding:16px;line-height:1.7;">Please add your ElevenLabs API key first.<br><span style=\"font-size:12px;color:#9e8c6e;\">Tap Cancel, then choose Update API Keys.</span></div>';
-    } else {
-      engVoices.forEach(v => {
-        const isSelected = v.id === getElVoiceId();
-        const row = document.createElement('button');
-        row.style.cssText = 'display:flex;align-items:center;gap:12px;width:100%;border-radius:10px;padding:15px 14px;cursor:pointer;text-align:left;transition:all .15s;' +
-          (isSelected ? 'background:rgba(212,175,55,.18);border:1px solid #d4af37;' : 'background:rgba(255,255,255,.05);border:1px solid rgba(212,175,55,.2);');
-        row.innerHTML =
-          '<span style="font-size:18px;color:#d4af37;flex-shrink:0;">▶</span>' +
-          '<span style="flex:1;"><span style="display:block;font-size:17px;color:#f5e6c8;font-style:italic;">' + v.name + '</span></span>' +
-          (isSelected ? '<span style="color:#d4af37;font-size:12px;font-family:Cinzel,serif;flex-shrink:0;">✓ Active</span>' : '');
-
-        row.addEventListener('click', () => {
-          document.querySelectorAll('#voice-list button').forEach(b => {
-            b.style.background = 'rgba(255,255,255,.05)';
-            b.style.borderColor = 'rgba(212,175,55,.2)';
-          });
-          row.style.background = 'rgba(212,175,55,.18)';
-          row.style.borderColor = '#d4af37';
-          _previewVoice = v;
-          document.getElementById('voice-status').textContent = 'Fetching preview from ElevenLabs…';
-          // Preview via ElevenLabs
-          if (window._frThomasAudio) { window._frThomasAudio.pause(); window._frThomasAudio = null; }
-          fetch('https://api.elevenlabs.io/v1/text-to-speech/' + v.id, {
-            method: 'POST',
-            headers: { 'xi-api-key': elKey, 'Content-Type': 'application/json', 'Accept': 'audio/mpeg' },
-            body: JSON.stringify({
-              text: 'Peace be with you, dear friend. I am Father Thomas, and I am so glad you are here.',
-              model_id: 'eleven_multilingual_v2',
-              voice_settings: { stability: 0.75, similarity_boost: 0.85, style: 0.20, use_speaker_boost: true }
-            })
-          })
-          .then(r => { if(!r.ok) throw new Error(r.status); return r.blob(); })
-          .then(blob => {
-            const url = URL.createObjectURL(blob);
-            const audio = new Audio(url);
-            window._frThomasAudio = audio;
-            audio.onended = () => {
-              URL.revokeObjectURL(url);
-              document.getElementById('voice-status').textContent = 'Tap Save Choice to use this voice.';
-            };
-            audio.play();
-          })
-          .catch(e => {
-            document.getElementById('voice-status').textContent = 'Preview failed. Check your ElevenLabs key.';
-            console.error(e);
-          });
-        });
-        list.appendChild(row);
-      });
-    }
-  }
-  document.getElementById('voice-overlay').style.display = 'flex';
-}
-
-document.getElementById('voice-save-btn').addEventListener('click', () => {
-  if (!_previewVoice) {
-    document.getElementById('voice-status').textContent = 'Please tap a voice to preview it first.';
-    return;
-  }
-  saveElVoiceId(_previewVoice.id);
-  document.getElementById('voice-status').textContent = 'Voice saved!';
-  if (window._frThomasAudio) { window._frThomasAudio.pause(); window._frThomasAudio = null; }
-  setTimeout(() => { document.getElementById('voice-overlay').style.display = 'none'; }, 900);
-});
-
-document.getElementById('voice-cancel-btn').addEventListener('click', () => {
-  window.speechSynthesis.cancel();
-  document.getElementById('voice-overlay').style.display = 'none';
-  showSettings();
-});
-
-
-});
-</script>
-
-<!-- SETTINGS MENU MODAL -->
-<div id="settings-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:200;align-items:center;justify-content:center;padding:24px;">
-  <div style="background:linear-gradient(160deg,#0d1b2a,#1a237e);border:1px solid rgba(212,175,55,.5);border-radius:20px;padding:30px 24px;max-width:400px;width:100%;text-align:center;">
-    <div style="font-size:26px;color:#d4af37;margin-bottom:6px;">⚙</div>
+<div id="settings-overlay">
+  <div class="overlay-box" style="text-align:center;">
+    <div style="font-size:26px;color:#d4af37;margin-bottom:6px;">&#9881;</div>
     <div style="font-size:20px;font-style:italic;color:#f5e6c8;margin-bottom:22px;">Settings</div>
     <div style="display:flex;flex-direction:column;gap:13px;">
-      <button id="settings-voice-btn" style="background:rgba(212,175,55,.15);border:1px solid #d4af37;border-radius:12px;padding:16px;color:#d4af37;font-size:17px;font-family:'Cinzel',serif;letter-spacing:1px;cursor:pointer;">🎙 Choose Father Thomas's Voice</button>
-      <button id="settings-key-btn" style="background:rgba(212,175,55,.08);border:1px solid rgba(212,175,55,.4);border-radius:12px;padding:16px;color:#9e8c6e;font-size:17px;font-family:'Cinzel',serif;letter-spacing:1px;cursor:pointer;">🔑 Update API Key</button>
+      <button id="settings-voice-btn" style="background:rgba(212,175,55,.15);border:1px solid #d4af37;border-radius:12px;padding:16px;color:#d4af37;font-size:17px;font-family:'Cinzel',serif;letter-spacing:1px;cursor:pointer;">&#127908; Choose Voice</button>
+      <button id="settings-key-btn" style="background:rgba(212,175,55,.08);border:1px solid rgba(212,175,55,.4);border-radius:12px;padding:16px;color:#9e8c6e;font-size:17px;font-family:'Cinzel',serif;letter-spacing:1px;cursor:pointer;">&#128273; Update API Keys</button>
       <button id="settings-close-btn" style="background:transparent;border:1px solid rgba(212,175,55,.25);border-radius:12px;padding:14px;color:#5a4e38;font-size:15px;font-family:'Cinzel',serif;letter-spacing:1px;cursor:pointer;">Close</button>
     </div>
   </div>
 </div>
 
-<!-- VOICE PICKER MODAL -->
-<div id="voice-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:210;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto;">
-  <div style="background:linear-gradient(160deg,#0d1b2a,#1a237e);border:1px solid rgba(212,175,55,.5);border-radius:20px;padding:28px 22px;max-width:520px;width:100%;margin:auto;">
+<div id="voice-overlay">
+  <div class="overlay-box">
     <div style="text-align:center;margin-bottom:18px;">
-      <div style="font-size:26px;color:#d4af37;">🎙</div>
+      <div style="font-size:26px;color:#d4af37;">&#127908;</div>
       <div style="font-size:20px;font-style:italic;color:#f5e6c8;margin-top:4px;">Choose Father Thomas's Voice</div>
       <div style="font-size:13px;color:#9e8c6e;margin-top:7px;line-height:1.6;">Tap each voice to hear a sample. All use your ElevenLabs key.</div>
     </div>
@@ -911,19 +186,18 @@ document.getElementById('voice-cancel-btn').addEventListener('click', () => {
   </div>
 </div>
 
-<!-- KEY SETUP MODAL -->
-<div id="key-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:220;align-items:center;justify-content:center;padding:24px;overflow-y:auto;">
-  <div style="background:linear-gradient(160deg,#0d1b2a,#1a237e);border:1px solid rgba(212,175,55,.5);border-radius:20px;padding:30px 24px;max-width:500px;width:100%;margin:auto;">
+<div id="key-overlay">
+  <div class="overlay-box">
     <div style="text-align:center;margin-bottom:20px;">
-      <div style="font-size:30px;color:#d4af37;">🔑</div>
+      <div style="font-size:30px;color:#d4af37;">&#128273;</div>
       <div style="font-size:20px;font-style:italic;color:#f5e6c8;margin-top:5px;">API Keys</div>
     </div>
-    <div style="font-size:13px;color:#d4af37;font-family:'Cinzel',serif;letter-spacing:1px;margin-bottom:6px;">ANTHROPIC KEY (required for Fr. Thomas chat)</div>
-    <div style="font-size:12px;color:#9e8c6e;margin-bottom:8px;">Get one at <strong>console.anthropic.com</strong></div>
-    <input id="key-input" type="password" placeholder="sk-ant-..." style="width:100%;background:rgba(255,255,255,.08);border:1px solid rgba(212,175,55,.4);border-radius:10px;padding:13px 15px;color:#f5e6c8;font-size:15px;font-family:'EB Garamond',Georgia,serif;outline:none;margin-bottom:18px;"/>
-    <div style="font-size:13px;color:#d4af37;font-family:'Cinzel',serif;letter-spacing:1px;margin-bottom:6px;">ELEVENLABS KEY (required for voice)</div>
-    <div style="font-size:12px;color:#9e8c6e;margin-bottom:8px;">Get one free at <strong>elevenlabs.io</strong> — free tier is plenty</div>
-    <input id="el-key-input" type="password" placeholder="your ElevenLabs API key..." style="width:100%;background:rgba(255,255,255,.08);border:1px solid rgba(212,175,55,.4);border-radius:10px;padding:13px 15px;color:#f5e6c8;font-size:15px;font-family:'EB Garamond',Georgia,serif;outline:none;margin-bottom:18px;"/>
+    <div style="font-size:13px;color:#d4af37;font-family:'Cinzel',serif;letter-spacing:1px;margin-bottom:6px;">ANTHROPIC KEY</div>
+    <div style="font-size:12px;color:#9e8c6e;margin-bottom:8px;">console.anthropic.com</div>
+    <input id="key-input" type="password" placeholder="sk-ant-..." style="width:100%;background:rgba(255,255,255,.08);border:1px solid rgba(212,175,55,.4);border-radius:10px;padding:13px 15px;color:#f5e6c8;font-size:15px;outline:none;margin-bottom:18px;"/>
+    <div style="font-size:13px;color:#d4af37;font-family:'Cinzel',serif;letter-spacing:1px;margin-bottom:6px;">ELEVENLABS KEY</div>
+    <div style="font-size:12px;color:#9e8c6e;margin-bottom:8px;">elevenlabs.io &mdash; free tier is sufficient</div>
+    <input id="el-key-input" type="password" placeholder="ElevenLabs API key..." style="width:100%;background:rgba(255,255,255,.08);border:1px solid rgba(212,175,55,.4);border-radius:10px;padding:13px 15px;color:#f5e6c8;font-size:15px;outline:none;margin-bottom:18px;"/>
     <div style="display:flex;gap:12px;justify-content:center;">
       <button id="key-save-btn" style="background:rgba(212,175,55,.75);border:none;border-radius:10px;padding:12px 28px;color:#0d1b2a;font-size:15px;font-family:'Cinzel',serif;letter-spacing:1px;cursor:pointer;">Save Keys</button>
       <button id="key-cancel-btn" style="background:transparent;border:1px solid rgba(212,175,55,.4);border-radius:10px;padding:12px 20px;color:#9e8c6e;font-size:15px;font-family:'Cinzel',serif;letter-spacing:1px;cursor:pointer;">Cancel</button>
@@ -932,7 +206,551 @@ document.getElementById('voice-cancel-btn').addEventListener('click', () => {
   </div>
 </div>
 
-<!-- GEAR BUTTON -->
-<button id="gear-btn" title="Settings" style="position:fixed;bottom:20px;right:18px;width:52px;height:52px;border-radius:50%;background:rgba(212,175,55,.18);border:2px solid rgba(212,175,55,.5);color:#d4af37;font-size:22px;cursor:pointer;z-index:50;box-shadow:0 2px 14px rgba(0,0,0,.5);">⚙</button>
+<button id="gear-btn" title="Settings">&#9881;</button>
+
+<script>
+// ── DATA ─────────────────────────────────────────────────────────────────────
+var HOURS = [
+  {id:'matins',name:'Matins / Office of Readings',latinName:'Officium Lectionis',time:'6:00 AM',hour:6,icon:'&#10022;',
+   greeting:'Domine, labia mea aperies — Lord, open my lips.',
+   prayer:'O God, come to my assistance. O Lord, make haste to help me.\nGlory be to the Father, and to the Son, and to the Holy Spirit,\nas it was in the beginning, is now, and ever shall be, world without end. Amen.\n\nLord, this morning I offer You my heart, my mind, and my day. May Your light guide my path and Your love sustain my soul. Amen.',
+   psalm:'Psalm 95 — Come, let us sing to the Lord; let us shout for joy to the Rock of our salvation.',
+   reading:'"I am the light of the world. Whoever follows me will never walk in darkness." — John 8:12'},
+  {id:'lauds',name:'Lauds — Morning Prayer',latinName:'Laudes Matutinae',time:'7:00 AM',hour:7,icon:'&#9728;',
+   greeting:'Blessed are You, Lord our God, King of the universe.',
+   prayer:'Father of light, in whom there is no change or shadow,\nYou bestow on all good gifts and flood the world with light.\nFill our lives with Your glory and Your peace.\nMay this morning be holy, good, and peaceful,\nas we walk in Your presence throughout this day. Amen.',
+   psalm:'Psalm 63 — O God, You are my God, I earnestly seek You; my soul thirsts for You.',
+   reading:'"This is the day the Lord has made; let us rejoice and be glad in it." — Psalm 118:24'},
+  {id:'terce',name:'Terce — Mid-Morning Prayer',latinName:'Hora Tertia',time:'9:00 AM',hour:9,icon:'&#10047;',
+   greeting:'Come, Holy Spirit, fill the hearts of Your faithful.',
+   prayer:'Lord God, may the Holy Spirit kindle in our hearts the fire of Your love\nand strengthen us for the work ahead.\nGuide our hands, our words, and our intentions\nthat all we do this morning may be for Your greater glory. Amen.',
+   psalm:'Psalm 119 — Teach me, Lord, the way of Your decrees, that I may follow it to the end.',
+   reading:'"Ask and it will be given to you; seek and you will find." — Matthew 7:7'},
+  {id:'sext',name:'Sext — Midday Prayer',latinName:'Hora Sexta',time:'12:00 PM',hour:12,icon:'&#10022;',
+   greeting:'At midday we pause to remember Your presence, Lord.',
+   prayer:'O Lord, as the sun reaches its height,\nwe offer You this moment of rest and recollection.\nForgive us our failings of the morning.\nRefresh our spirit and renew our purpose,\nthat the remainder of this day may be lived in Your grace. Amen.',
+   psalm:'Psalm 23 — The Lord is my shepherd; I shall not want. He makes me lie down in green pastures.',
+   reading:'"Come to me, all you who are weary and burdened, and I will give you rest." — Matthew 11:28'},
+  {id:'none',name:'None — Afternoon Prayer',latinName:'Hora Nona',time:'3:00 PM',hour:15,icon:'&#10013;',
+   greeting:'At this hour, Christ breathed His last for us.',
+   prayer:'Lord Jesus, at this hour You stretched out Your arms upon the Cross\nand offered Your life for our salvation.\nMay the mystery of Your Passion fill our hearts with gratitude,\nand may we carry our own crosses with faith and courage.\nHave mercy on us and on the whole world. Amen.',
+   psalm:'Psalm 22 — My God, my God, why have You forsaken me? But You are the Holy One.',
+   reading:'"Greater love has no one than this: to lay down ones life for ones friends." — John 15:13'},
+  {id:'vespers',name:'Vespers — Evening Prayer',latinName:'Vesperae',time:'6:00 PM',hour:18,icon:'&#9733;',
+   greeting:'Remain with us, Lord, for evening draws near.',
+   prayer:'O Gracious God, as evening falls we return to You in prayer.\nWe thank You for the gifts of this day, for life, for breath, for love.\nForgive us where we fell short, and bless those we love.\nMay Your angels watch over us through the night,\nand may the Blessed Virgin Mary intercede for us always. Amen.\n\nMagnificat: My soul proclaims the greatness of the Lord;\nmy spirit rejoices in God my Savior.',
+   psalm:'Psalm 141 — Let my prayer be counted as incense before You.',
+   reading:'"Peace I leave with you; my peace I give to you." — John 14:27'},
+  {id:'compline',name:'Compline — Night Prayer',latinName:'Completorium',time:'9:00 PM',hour:21,icon:'&#9789;',
+   greeting:'Into Your hands, Lord, I commend my spirit.',
+   prayer:'Lord, grant us a restful night and a peaceful death.\nProtect us from all evil and danger this night.\nMay Your holy angels surround us,\nand may we wake to praise You in the morning light.\n\nHail, Holy Queen, Mother of Mercy,\nour life, our sweetness, and our hope.\nTo thee do we cry, poor banished children of Eve;\nto thee do we send up our sighs,\nmourning and weeping in this vale of tears. Amen.',
+   psalm:'Psalm 91 — He who dwells in the shelter of the Most High will rest in the shadow of the Almighty.',
+   reading:'"I will lie down and sleep in peace, for You alone, Lord, make me dwell in safety." — Psalm 4:8'}
+];
+
+var PRAYERS = [
+  {title:'The Rosary — Joyful Mysteries',
+   text:'Begin with the Apostles Creed, then one Our Father, three Hail Marys, and one Glory Be.\n\nFirst Mystery: The Annunciation\nSecond Mystery: The Visitation\nThird Mystery: The Nativity\nFourth Mystery: The Presentation in the Temple\nFifth Mystery: The Finding of Jesus in the Temple\n\nFor each mystery: one Our Father, ten Hail Marys, one Glory Be, and the Fatima Prayer:\nO my Jesus, forgive us our sins, save us from the fires of hell, lead all souls to heaven, especially those in most need of your mercy.'},
+  {title:'Divine Mercy Chaplet',
+   text:'On the Our Father beads:\nEternal Father, I offer You the Body and Blood, Soul and Divinity of Your dearly beloved Son, in atonement for our sins and those of the whole world.\n\nOn the Hail Mary beads, ten times:\nFor the sake of His sorrowful Passion, have mercy on us and on the whole world.\n\nConclude three times:\nHoly God, Holy Mighty One, Holy Immortal One, have mercy on us and on the whole world.'},
+  {title:'Morning Offering',
+   text:'O Jesus, through the Immaculate Heart of Mary,\nI offer You my prayers, works, joys and sufferings\nof this day in union with the Holy Sacrifice of the Mass\nthroughout the world.\nI offer them for all the intentions of Your Sacred Heart:\nthe salvation of souls, reparation for sin,\nand the reunion of all Christians. Amen.'},
+  {title:'Act of Contrition',
+   text:'O my God, I am heartily sorry for having offended Thee,\nand I detest all my sins because of Thy just punishments,\nbut most of all because they offend Thee, my God,\nwho art all good and deserving of all my love.\nI firmly resolve, with the help of Thy grace,\nto sin no more and to avoid the near occasions of sin. Amen.'},
+  {title:'Prayer to Saint Michael',
+   text:'Saint Michael the Archangel, defend us in battle.\nBe our protection against the wickedness and snares of the devil.\nMay God rebuke him, we humbly pray;\nand do Thou, O Prince of the Heavenly Host,\nby the Power of God, cast into Hell Satan\nand all the evil spirits who roam through the world\nseeking the ruin of souls. Amen.'},
+  {title:'Memorare',
+   text:'Remember, O most gracious Virgin Mary,\nthat never was it known that anyone who fled to Thy protection,\nimplored Thy help, or sought Thy intercession, was left unaided.\nInspired by this confidence, I fly unto Thee, O Virgin of virgins, my Mother;\nto Thee do I come, before Thee I stand, sinful and sorrowful.\nO Mother of the Word Incarnate, despise not my petitions,\nbut in Thy mercy hear and answer me. Amen.'}
+];
+
+var EL_VOICES = [
+  {id:'huSf6WJX1X9lGY6I9CfQ', name:'Father Thomas (selected)'},
+  {id:'onwK4e9ZLuTAKqWW03F9', name:'Daniel (calm, British)'},
+  {id:'TX3LPaxmHKxFdv7VOQHJ', name:'Liam (warm, Irish)'},
+  {id:'XB0fDUnXU5powFXDhCwa', name:'Thomas (deep, authoritative)'},
+  {id:'nPczCjzI2devNBz1zQrb', name:'Brian (measured, American)'},
+  {id:'N2lVS1w4EtoT3dr4eOWO', name:'Callum (resonant, British)'},
+  {id:'CwhRBWXzGAHq8TQ4Fs17', name:'Roger (warm, distinguished)'}
+];
+
+// ── STATE ────────────────────────────────────────────────────────────────────
+var currentTab = 'home';
+var messages = [{role:'assistant',content:'Pax et bonum. Peace and goodness to you, dear friend. I am Father Thomas, and I am so glad you are here. How are you today? Is there something on your heart, a prayer you would like to offer, or perhaps a passage of Scripture you would like to reflect on together?'}];
+var autoSpeak = true;
+var isListening = false;
+var isSpeaking = false;
+var recognition = null;
+var currentTranscript = '';
+var pendingHour = null;
+var chatGreetingSpoken = false;
+var _previewVoice = null;
+var _promptText = '';
+
+// ── STORAGE ──────────────────────────────────────────────────────────────────
+function getApiKey()      { return localStorage.getItem('fr_thomas_key') || ''; }
+function saveApiKey(k)    { localStorage.setItem('fr_thomas_key', k.trim()); }
+function getElKey()       { return localStorage.getItem('el_key') || ''; }
+function saveElKey(k)     { localStorage.setItem('el_key', k.trim()); }
+function getElVoiceId()   { return localStorage.getItem('el_voice_id') || 'huSf6WJX1X9lGY6I9CfQ'; }
+function saveElVoiceId(v) { localStorage.setItem('el_voice_id', v); }
+
+// ── LITURGICAL CONTEXT ───────────────────────────────────────────────────────
+function getLitCtx() {
+  var now = new Date(), m = now.getMonth()+1, d = now.getDay();
+  var season = 'Ordinary Time';
+  if (m===12 || (m===11 && now.getDate()>=27)) season='Advent';
+  else if (m===1 || (m===2 && now.getDate()<=2)) season='Christmas Season';
+  else if (m>=2 && m<=4) season='Lent';
+  return {season:season, dayName:['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][d]};
+}
+function getCurrentHour() {
+  var h = new Date().getHours(), active = HOURS[HOURS.length-1];
+  for (var i=0;i<HOURS.length;i++) { if (h>=HOURS[i].hour) active=HOURS[i]; else break; }
+  return active;
+}
+var ctx = getLitCtx();
+var curHour = getCurrentHour();
+
+// ── SYSTEM PROMPT ────────────────────────────────────────────────────────────
+function buildSystem() {
+  return 'You are Father Thomas, a warm, gentle, and deeply learned Roman Catholic priest speaking with an elderly woman of deep faith who uses this app for daily spiritual companionship and prayer.\n\nToday is ' + ctx.dayName + ', in the season of ' + ctx.season + '.\n\nBe a compassionate spiritual companion. Guide her through Catholic prayer, Scripture, and tradition. Be patient and never condescending. Use gentle accessible language. Reference saints and Scripture. Occasionally use Latin phrases with translation. Always end with a blessing. Keep responses to 3 to 4 paragraphs. Write in flowing natural spoken sentences only, no bullet points or special characters, as your response will be read aloud.';
+}
+
+// ── TTS — ELEVENLABS ─────────────────────────────────────────────────────────
+function cleanForSpeech(text) {
+  var t = text || '';
+  var specials = ['\u2726','\u271d','\u2605','\u2600','\u263d','\u273f','\u2022','\u2721'];
+  for (var i=0;i<specials.length;i++) { t = t.split(specials[i]).join(' '); }
+  t = t.split('\u2013').join(', ').split('\u2014').join(', ');
+  t = t.split('\n').join('. ');
+  while (t.indexOf('  ') !== -1) { t = t.split('  ').join(' '); }
+  return t.trim();
+}
+
+function showSpeakingBar(show) {
+  document.getElementById('speaking-bar').style.display = show ? 'flex' : 'none';
+}
+
+function stopSpeaking() {
+  if (window._frThomasAudio) {
+    window._frThomasAudio.pause();
+    window._frThomasAudio.currentTime = 0;
+    window._frThomasAudio = null;
+  }
+  isSpeaking = false;
+  showSpeakingBar(false);
+}
+
+// Show a gold "Hear Father Thomas" button — needed because Chrome blocks autoplay
+// until the user has interacted with the page
+function showPlayPrompt(text) {
+  _promptText = text;
+  var existing = document.getElementById('play-prompt');
+  if (existing) existing.remove();
+  var btn = document.createElement('button');
+  btn.id = 'play-prompt';
+  btn.innerHTML = '&#128266; Hear Father Thomas';
+  btn.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:rgba(212,175,55,.95);border:none;border-radius:24px;padding:15px 30px;color:#0d1b2a;font-size:17px;font-family:Cinzel,serif;letter-spacing:1px;cursor:pointer;z-index:300;box-shadow:0 4px 20px rgba(0,0,0,.5);white-space:nowrap;';
+  btn.addEventListener('click', function() {
+    btn.remove();
+    speakElevenLabs(cleanForSpeech(_promptText), null);
+  });
+  document.body.appendChild(btn);
+  setTimeout(function() { if (btn.parentNode) btn.remove(); }, 15000);
+}
+
+function speakElevenLabs(clean, onEnd) {
+  var key = getElKey();
+  if (!key) { if (onEnd) onEnd(); return; }
+  var voiceId = getElVoiceId();
+  var controller = new AbortController();
+  var timer = setTimeout(function() { controller.abort(); }, 15000);
+  fetch('https://api.elevenlabs.io/v1/text-to-speech/' + voiceId, {
+    method: 'POST',
+    signal: controller.signal,
+    headers: {'xi-api-key':key,'Content-Type':'application/json','Accept':'audio/mpeg'},
+    body: JSON.stringify({text:clean, model_id:'eleven_multilingual_v2', voice_settings:{stability:0.75,similarity_boost:0.85,style:0.20,use_speaker_boost:true}})
+  })
+  .then(function(res) {
+    clearTimeout(timer);
+    if (!res.ok) throw new Error('EL ' + res.status);
+    return res.blob();
+  })
+  .then(function(blob) {
+    var url = URL.createObjectURL(blob);
+    var audio = new Audio(url);
+    window._frThomasAudio = audio;
+    isSpeaking = true; showSpeakingBar(true);
+    audio.onended = function() { isSpeaking=false; showSpeakingBar(false); URL.revokeObjectURL(url); if(onEnd) onEnd(); };
+    audio.onerror = function() { isSpeaking=false; showSpeakingBar(false); URL.revokeObjectURL(url); if(onEnd) onEnd(); };
+    audio.play().catch(function(e) {
+      // Autoplay blocked -- show the tap-to-hear prompt
+      isSpeaking=false; showSpeakingBar(false);
+      showPlayPrompt(_promptText || clean);
+    });
+  })
+  .catch(function(e) {
+    clearTimeout(timer);
+    isSpeaking=false; showSpeakingBar(false);
+    console.error('ElevenLabs error:', e);
+    if (onEnd) onEnd();
+  });
+}
+
+function speak(text) {
+  var clean = cleanForSpeech(text);
+  _promptText = text;
+  if (getElKey()) {
+    speakElevenLabs(clean, null);
+  }
+}
+
+// ── SPEECH RECOGNITION ───────────────────────────────────────────────────────
+var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+if (SpeechRecognition) {
+  recognition = new SpeechRecognition();
+  recognition.continuous = false;
+  recognition.interimResults = true;
+  recognition.lang = 'en-US';
+  recognition.onresult = function(e) {
+    currentTranscript = Array.from(e.results).map(function(r){return r[0].transcript;}).join('');
+    document.getElementById('chat-input').value = currentTranscript;
+    updateSendBtn();
+  };
+  recognition.onend = function() {
+    isListening = false;
+    document.getElementById('mic-btn').classList.remove('listening');
+    document.getElementById('listening-bar').style.display = 'none';
+    if (currentTranscript.trim()) {
+      setTimeout(function() { sendMessage(currentTranscript.trim()); }, 300);
+    }
+  };
+  recognition.onerror = function(e) {
+    isListening = false;
+    document.getElementById('mic-btn').classList.remove('listening');
+    var bar = document.getElementById('listening-bar');
+    bar.style.display = 'flex';
+    bar.querySelector('span').textContent = 'Mic error: ' + e.error + '. Check browser permissions.';
+    setTimeout(function() { bar.style.display = 'none'; }, 5000);
+    console.error('Recognition error:', e.error);
+  };
+}
+
+function toggleMic() {
+  if (!recognition) { alert('Speech recognition not available in this browser.'); return; }
+  if (isListening) {
+    recognition.stop();
+    return;
+  }
+  stopSpeaking();
+  // Request mic permission explicitly first
+  navigator.mediaDevices.getUserMedia({audio:true})
+  .then(function(stream) {
+    stream.getTracks().forEach(function(t){t.stop();});
+    currentTranscript = '';
+    document.getElementById('chat-input').value = '';
+    try { recognition.abort(); } catch(e) {}
+    setTimeout(function() {
+      try {
+        isListening = true;
+        document.getElementById('mic-btn').classList.add('listening');
+        var bar = document.getElementById('listening-bar');
+        bar.style.display = 'flex';
+        bar.querySelector('span').textContent = 'Listening\u2026 speak now';
+        recognition.start();
+      } catch(e) {
+        isListening = false;
+        document.getElementById('mic-btn').classList.remove('listening');
+        document.getElementById('listening-bar').style.display = 'none';
+        console.error('Recognition start error:', e);
+      }
+    }, 150);
+  })
+  .catch(function(err) {
+    console.error('Mic permission error:', err);
+    var bar = document.getElementById('listening-bar');
+    bar.style.display = 'flex';
+    bar.querySelector('span').textContent = 'Microphone access denied. Please allow it in Chrome settings.';
+    setTimeout(function() { bar.style.display = 'none'; }, 6000);
+  });
+}
+
+// ── CHAT ─────────────────────────────────────────────────────────────────────
+function renderMessages() {
+  var el = document.getElementById('chat-messages');
+  el.innerHTML = '';
+  messages.forEach(function(msg) {
+    var row = document.createElement('div');
+    row.className = 'msg-row ' + msg.role;
+    if (msg.role === 'assistant') {
+      row.innerHTML = '<div style="display:flex;align-items:center;gap:7px;margin-bottom:4px;"><div class="avatar">&#10013;</div><span class="sender-label">Father Thomas</span></div><div class="bubble assistant">' + msg.content.split('\n').join('<br>') + '</div>';
+    } else {
+      row.innerHTML = '<div class="sender-label">You</div><div class="bubble user">' + msg.content.split('\n').join('<br>') + '</div>';
+    }
+    el.appendChild(row);
+  });
+  el.scrollTop = el.scrollHeight;
+}
+
+function showTyping(show) {
+  var ind = document.getElementById('typing-ind');
+  if (show && !ind) {
+    ind = document.createElement('div');
+    ind.id = 'typing-ind';
+    ind.className = 'msg-row assistant';
+    ind.innerHTML = '<div style="display:flex;align-items:center;gap:7px;margin-bottom:4px;"><div class="avatar">&#10013;</div></div><div class="typing-indicator">Father Thomas is composing a response&hellip;</div>';
+    document.getElementById('chat-messages').appendChild(ind);
+    document.getElementById('chat-messages').scrollTop = 99999;
+  } else if (!show && ind) {
+    ind.remove();
+  }
+}
+
+function updateSendBtn() {
+  document.getElementById('send-btn').disabled = !document.getElementById('chat-input').value.trim();
+}
+
+async function sendMessage(text) {
+  var content = (text || document.getElementById('chat-input').value).trim();
+  if (!content) return;
+  if (isListening) recognition.stop();
+  stopSpeaking();
+  messages.push({role:'user', content:content});
+  document.getElementById('chat-input').value = '';
+  currentTranscript = '';
+  updateSendBtn();
+  renderMessages();
+  showTyping(true);
+  document.getElementById('send-btn').disabled = true;
+  var apiKey = getApiKey();
+  if (!apiKey) {
+    showTyping(false);
+    messages.push({role:'assistant', content:'I need a small piece of setup first. Please tap the gear button and enter your Anthropic API key. God bless you.'});
+    renderMessages();
+    showKeySetup();
+    document.getElementById('send-btn').disabled = false;
+    return;
+  }
+  try {
+    var res = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-sonnet-4-6', max_tokens:1000, system:buildSystem(), messages:messages})
+    });
+    var data = await res.json();
+    if (data.error) throw new Error(data.error.message || 'API error');
+    var reply = (data.content||[]).find(function(b){return b.type==='text';});
+    reply = reply ? reply.text : 'Forgive me, I was unable to respond just now. Please try again.';
+    showTyping(false);
+    messages.push({role:'assistant', content:reply});
+    renderMessages();
+    if (autoSpeak && getElKey()) showPlayPrompt(reply);
+  } catch(e) {
+    showTyping(false);
+    var errMsg = 'Connection error: ' + (e && e.message ? e.message : String(e));
+    messages.push({role:'assistant', content:errMsg});
+    renderMessages();
+    console.error('API error:', e);
+  }
+  document.getElementById('send-btn').disabled = false;
+}
+
+// ── TABS ─────────────────────────────────────────────────────────────────────
+function switchTab(tab) {
+  currentTab = tab;
+  ['home','chat','prayers'].forEach(function(t) {
+    document.getElementById('tab-'+t).style.display = t===tab ? 'block' : 'none';
+    document.querySelector('.nav-btn[data-tab="'+t+'"]').classList.toggle('active', t===tab);
+  });
+  if (tab==='chat' && !chatGreetingSpoken && getElKey()) {
+    chatGreetingSpoken = true;
+    setTimeout(function() { showPlayPrompt(messages[0].content); }, 500);
+  }
+}
+
+// ── HOUR MODAL ───────────────────────────────────────────────────────────────
+function openHour(hr) {
+  pendingHour = hr;
+  document.getElementById('m-icon').innerHTML = hr.icon;
+  document.getElementById('m-name').textContent = hr.name;
+  document.getElementById('m-latin').textContent = hr.latinName + ' · ' + hr.time;
+  document.getElementById('m-reading').textContent = hr.reading;
+  document.getElementById('m-psalm').textContent = hr.psalm;
+  document.getElementById('m-prayer').textContent = hr.prayer;
+  document.getElementById('modal-overlay').classList.add('open');
+}
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  stopSpeaking();
+}
+
+// ── BUILD HOME ───────────────────────────────────────────────────────────────
+function buildHome() {
+  document.getElementById('context-badge').textContent = ctx.dayName + ' · Season of ' + ctx.season;
+  document.getElementById('cur-icon').innerHTML = curHour.icon;
+  document.getElementById('cur-name').textContent = curHour.name;
+  document.getElementById('cur-latin').textContent = curHour.latinName + ' · ' + curHour.time;
+  document.getElementById('cur-greeting').textContent = '"' + curHour.greeting + '"';
+  document.getElementById('cur-open-btn').onclick = function() { openHour(curHour); };
+  var grid = document.getElementById('hours-grid');
+  HOURS.forEach(function(hr) {
+    var tile = document.createElement('div');
+    tile.className = 'hour-tile' + (hr.id===curHour.id ? ' active' : '');
+    tile.innerHTML = '<div style="font-size:20px;color:#d4af37;margin-bottom:5px;">' + hr.icon + '</div><div style="font-size:14px;font-style:italic;color:#f5e6c8;margin-bottom:2px;">' + hr.name + '</div><div style="font-size:12px;color:#9e8c6e;font-family:Cinzel,serif;">' + hr.time + '</div>';
+    tile.onclick = function() { openHour(hr); };
+    grid.appendChild(tile);
+  });
+}
+
+// ── BUILD PRAYERS ────────────────────────────────────────────────────────────
+function buildPrayers() {
+  var list = document.getElementById('prayers-list');
+  PRAYERS.forEach(function(p) {
+    var card = document.createElement('div');
+    card.className = 'prayer-card';
+    card.innerHTML = '<div class="prayer-card-title">' + p.title + '</div><div class="prayer-card-text">' + p.text + '</div>';
+    var btn = document.createElement('button');
+    btn.className = 'read-aloud-btn';
+    btn.innerHTML = '&#128266; Read Aloud';
+    btn.onclick = function() { showPlayPrompt(p.text); };
+    card.appendChild(btn);
+    list.appendChild(card);
+  });
+}
+
+// ── SETTINGS ─────────────────────────────────────────────────────────────────
+function showSettings() { document.getElementById('settings-overlay').style.display = 'flex'; }
+function hideSettings() { document.getElementById('settings-overlay').style.display = 'none'; }
+
+function showKeySetup() {
+  document.getElementById('key-overlay').style.display = 'flex';
+  var a = getApiKey(), el = getElKey();
+  if (a) document.getElementById('key-input').value = a;
+  if (el) document.getElementById('el-key-input').value = el;
+  document.getElementById('key-status').textContent = '';
+}
+function hideKeySetup() { document.getElementById('key-overlay').style.display = 'none'; }
+
+function showVoicePicker() {
+  var list = document.getElementById('voice-list');
+  list.innerHTML = '';
+  document.getElementById('voice-status').textContent = '';
+  _previewVoice = null;
+  var elKey = getElKey();
+  if (!elKey) {
+    list.innerHTML = '<div style="color:#ef9a9a;text-align:center;padding:16px;line-height:1.7;font-style:italic;">Please add your ElevenLabs API key first via Update API Keys.</div>';
+  } else {
+    EL_VOICES.forEach(function(v) {
+      var isSelected = v.id === getElVoiceId();
+      var row = document.createElement('button');
+      row.style.cssText = 'display:flex;align-items:center;gap:12px;width:100%;border-radius:10px;padding:15px 14px;cursor:pointer;text-align:left;' + (isSelected ? 'background:rgba(212,175,55,.18);border:1px solid #d4af37;' : 'background:rgba(255,255,255,.05);border:1px solid rgba(212,175,55,.2);');
+      row.innerHTML = '<span style="font-size:18px;color:#d4af37;flex-shrink:0;">&#9654;</span><span style="flex:1;font-size:17px;color:#f5e6c8;font-style:italic;">' + v.name + '</span>' + (isSelected ? '<span style="color:#d4af37;font-size:12px;font-family:Cinzel,serif;flex-shrink:0;">&#10003; Active</span>' : '');
+      row.addEventListener('click', function() {
+        document.querySelectorAll('#voice-list button').forEach(function(b){ b.style.background='rgba(255,255,255,.05)'; b.style.borderColor='rgba(212,175,55,.2)'; });
+        row.style.background = 'rgba(212,175,55,.18)'; row.style.borderColor = '#d4af37';
+        _previewVoice = v;
+        document.getElementById('voice-status').textContent = 'Fetching preview...';
+        if (window._frThomasAudio) { window._frThomasAudio.pause(); window._frThomasAudio = null; }
+        fetch('https://api.elevenlabs.io/v1/text-to-speech/' + v.id, {
+          method:'POST',
+          headers:{'xi-api-key':elKey,'Content-Type':'application/json','Accept':'audio/mpeg'},
+          body:JSON.stringify({text:'Peace be with you, dear friend. I am Father Thomas.', model_id:'eleven_multilingual_v2', voice_settings:{stability:0.75,similarity_boost:0.85,style:0.20,use_speaker_boost:true}})
+        })
+        .then(function(r){ if(!r.ok) throw new Error(r.status); return r.blob(); })
+        .then(function(blob){
+          var url = URL.createObjectURL(blob);
+          var audio = new Audio(url);
+          window._frThomasAudio = audio;
+          audio.onended = function() { URL.revokeObjectURL(url); document.getElementById('voice-status').textContent = 'Tap Save Choice to use this voice.'; };
+          audio.play().catch(function(){ document.getElementById('voice-status').textContent = 'Preview ready. Tap Save to select.'; });
+        })
+        .catch(function(e){ document.getElementById('voice-status').textContent = 'Preview failed. Check ElevenLabs key.'; });
+      });
+      list.appendChild(row);
+    });
+  }
+  document.getElementById('voice-overlay').style.display = 'flex';
+}
+
+// ── EVENT WIRING ─────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', function() {
+  buildHome();
+  buildPrayers();
+  renderMessages();
+
+  // Nav
+  document.querySelectorAll('.nav-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() { switchTab(btn.dataset.tab); });
+  });
+
+  // Mic -- use touchend for reliable mobile response
+  (function() {
+    var mb = document.getElementById('mic-btn'), tapped = false;
+    mb.addEventListener('touchend', function(e) { e.preventDefault(); tapped=true; toggleMic(); });
+    mb.addEventListener('click', function() { if(!tapped) toggleMic(); tapped=false; });
+  })();
+
+  // Chat input
+  document.getElementById('chat-input').addEventListener('input', updateSendBtn);
+  document.getElementById('chat-input').addEventListener('keydown', function(e) {
+    if (e.key==='Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+  });
+  document.getElementById('send-btn').addEventListener('click', function() { sendMessage(); });
+  document.getElementById('stop-speak-btn').addEventListener('click', stopSpeaking);
+
+  // Voice toggle
+  document.getElementById('voice-toggle').addEventListener('click', function() {
+    autoSpeak = !autoSpeak;
+    this.textContent = autoSpeak ? '\uD83D\uDD0A Voice On' : '\uD83D\uDD07 Voice Off';
+    this.classList.toggle('on', autoSpeak);
+    if (!autoSpeak) stopSpeaking();
+  });
+
+  // Modal
+  document.getElementById('modal-close').addEventListener('click', closeModal);
+  document.getElementById('modal-overlay').addEventListener('click', function(e) { if(e.target===this) closeModal(); });
+  document.getElementById('m-read-btn').addEventListener('click', function() { if(pendingHour) showPlayPrompt(pendingHour.prayer); });
+  document.getElementById('m-chat-btn').addEventListener('click', function() { closeModal(); switchTab('chat'); });
+
+  // Gear / settings
+  document.getElementById('gear-btn').addEventListener('click', showSettings);
+  document.getElementById('settings-close-btn').addEventListener('click', hideSettings);
+  document.getElementById('settings-overlay').addEventListener('click', function(e) { if(e.target===this) hideSettings(); });
+  document.getElementById('settings-voice-btn').addEventListener('click', function() { hideSettings(); showVoicePicker(); });
+  document.getElementById('settings-key-btn').addEventListener('click', function() { hideSettings(); showKeySetup(); });
+
+  // Voice picker
+  document.getElementById('voice-save-btn').addEventListener('click', function() {
+    if (!_previewVoice) { document.getElementById('voice-status').textContent = 'Please tap a voice to preview first.'; return; }
+    saveElVoiceId(_previewVoice.id);
+    document.getElementById('voice-status').textContent = 'Voice saved!';
+    if (window._frThomasAudio) { window._frThomasAudio.pause(); window._frThomasAudio = null; }
+    setTimeout(function() { document.getElementById('voice-overlay').style.display='none'; }, 900);
+  });
+  document.getElementById('voice-cancel-btn').addEventListener('click', function() {
+    if (window._frThomasAudio) { window._frThomasAudio.pause(); window._frThomasAudio = null; }
+    document.getElementById('voice-overlay').style.display='none';
+    showSettings();
+  });
+
+  // API keys
+  document.getElementById('key-save-btn').addEventListener('click', function() {
+    var a = document.getElementById('key-input').value.trim();
+    var el = document.getElementById('el-key-input').value.trim();
+    var msg = '';
+    if (a) { if (!a.startsWith('sk-')) { document.getElementById('key-status').textContent = 'Anthropic key should start with sk-ant-'; return; } saveApiKey(a); msg += 'Anthropic key saved. '; }
+    if (el) { saveElKey(el); msg += 'ElevenLabs key saved.'; }
+    if (!msg) { document.getElementById('key-status').textContent = 'Please enter at least one key.'; return; }
+    document.getElementById('key-status').textContent = msg + ' All set!';
+    setTimeout(function() { document.getElementById('key-overlay').style.display='none'; }, 1400);
+  });
+  document.getElementById('key-cancel-btn').addEventListener('click', hideKeySetup);
+  document.getElementById('key-overlay').addEventListener('click', function(e) { if(e.target===this) hideKeySetup(); });
+
+  // First run
+  if (!localStorage.getItem('el_voice_id')) localStorage.setItem('el_voice_id','huSf6WJX1X9lGY6I9CfQ');
+  if (!getApiKey()) setTimeout(showKeySetup, 1000);
+});
+</script>
 </body>
 </html>
