@@ -332,6 +332,10 @@ function showSpeakingBar(show) {
 }
 
 function stopSpeaking() {
+  if (window._frThomasSource) {
+    try { window._frThomasSource.stop(); } catch(e) {}
+    window._frThomasSource = null;
+  }
   if (window._frThomasAudio) {
     window._frThomasAudio.pause();
     window._frThomasAudio.currentTime = 0;
@@ -363,36 +367,97 @@ function speakElevenLabs(clean, onEnd) {
   var key = getElKey();
   if (!key) { if (onEnd) onEnd(); return; }
   var voiceId = getElVoiceId();
+
+  // Show a loading indicator on the button if it exists
+  var promptBtn = document.getElementById('play-prompt');
+  if (promptBtn) promptBtn.innerHTML = '&#9679;&#9679;&#9679; Loading voice&hellip;';
+
   var controller = new AbortController();
-  var timer = setTimeout(function() { controller.abort(); }, 15000);
+  var timer = setTimeout(function() { controller.abort(); }, 20000);
+
   fetch('https://api.elevenlabs.io/v1/text-to-speech/' + voiceId, {
     method: 'POST',
     signal: controller.signal,
     headers: {'xi-api-key':key,'Content-Type':'application/json','Accept':'audio/mpeg'},
-    body: JSON.stringify({text:clean, model_id:'eleven_multilingual_v2', voice_settings:{stability:0.75,similarity_boost:0.85,style:0.20,use_speaker_boost:true}})
+    body: JSON.stringify({
+      text: clean,
+      model_id: 'eleven_multilingual_v2',
+      voice_settings: {stability:0.75, similarity_boost:0.85, style:0.20, use_speaker_boost:true}
+    })
   })
   .then(function(res) {
     clearTimeout(timer);
-    if (!res.ok) throw new Error('EL ' + res.status);
-    return res.blob();
+    if (!res.ok) throw new Error('ElevenLabs returned status ' + res.status);
+    return res.arrayBuffer();  // use arrayBuffer instead of blob for better Android compat
   })
-  .then(function(blob) {
-    var url = URL.createObjectURL(blob);
-    var audio = new Audio(url);
-    window._frThomasAudio = audio;
-    isSpeaking = true; showSpeakingBar(true);
-    audio.onended = function() { isSpeaking=false; showSpeakingBar(false); URL.revokeObjectURL(url); if(onEnd) onEnd(); };
-    audio.onerror = function() { isSpeaking=false; showSpeakingBar(false); URL.revokeObjectURL(url); if(onEnd) onEnd(); };
-    audio.play().catch(function(e) {
-      // Autoplay blocked -- show the tap-to-hear prompt
-      isSpeaking=false; showSpeakingBar(false);
-      showPlayPrompt(_promptText || clean);
+  .then(function(arrayBuffer) {
+    // Decode and play via AudioContext -- more reliable than new Audio() on Android
+    var AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContext) {
+      // Fallback to blob/Audio element
+      var blob = new Blob([arrayBuffer], {type:'audio/mpeg'});
+      var url = URL.createObjectURL(blob);
+      var audio = new Audio(url);
+      window._frThomasAudio = audio;
+      isSpeaking = true; showSpeakingBar(true);
+      var btn = document.getElementById('play-prompt');
+      if (btn) btn.remove();
+      audio.onended = function() { isSpeaking=false; showSpeakingBar(false); URL.revokeObjectURL(url); if(onEnd) onEnd(); };
+      audio.onerror = function(e) {
+        console.error('Audio element error:', e);
+        isSpeaking=false; showSpeakingBar(false); URL.revokeObjectURL(url);
+        var btn2 = document.getElementById('play-prompt');
+        if (btn2) { btn2.innerHTML = '&#128266; Hear Father Thomas'; }
+        if (onEnd) onEnd();
+      };
+      audio.play().catch(function(e) {
+        console.error('audio.play() failed:', e.name, e.message);
+        isSpeaking=false; showSpeakingBar(false);
+        var btn3 = document.getElementById('play-prompt');
+        if (btn3) btn3.innerHTML = '&#128266; Hear Father Thomas (tap again)';
+      });
+      return;
+    }
+
+    // AudioContext path -- most reliable on Android Chrome
+    if (!window._audioCtx) {
+      window._audioCtx = new AudioContext();
+    }
+    var ctx = window._audioCtx;
+    // Resume context if suspended (required after user gesture on some Android versions)
+    var resume = ctx.state === 'suspended' ? ctx.resume() : Promise.resolve();
+    resume.then(function() {
+      ctx.decodeAudioData(arrayBuffer, function(buffer) {
+        // Stop any currently playing
+        if (window._frThomasSource) {
+          try { window._frThomasSource.stop(); } catch(e) {}
+        }
+        var source = ctx.createBufferSource();
+        source.buffer = buffer;
+        source.connect(ctx.destination);
+        window._frThomasSource = source;
+        isSpeaking = true; showSpeakingBar(true);
+        var btn = document.getElementById('play-prompt');
+        if (btn) btn.remove();
+        source.onended = function() {
+          isSpeaking = false; showSpeakingBar(false);
+          if (onEnd) onEnd();
+        };
+        source.start(0);
+      }, function(e) {
+        console.error('decodeAudioData failed:', e);
+        isSpeaking=false; showSpeakingBar(false);
+        var btn = document.getElementById('play-prompt');
+        if (btn) btn.innerHTML = '&#128266; Hear Father Thomas (decode error)';
+      });
     });
   })
   .catch(function(e) {
     clearTimeout(timer);
     isSpeaking=false; showSpeakingBar(false);
-    console.error('ElevenLabs error:', e);
+    console.error('ElevenLabs fetch error:', e.name, e.message);
+    var btn = document.getElementById('play-prompt');
+    if (btn) btn.innerHTML = '&#128266; Error: ' + e.message;
     if (onEnd) onEnd();
   });
 }
@@ -407,70 +472,87 @@ function speak(text) {
 
 // ── SPEECH RECOGNITION ───────────────────────────────────────────────────────
 var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-if (SpeechRecognition) {
-  recognition = new SpeechRecognition();
-  recognition.continuous = false;
-  recognition.interimResults = true;
-  recognition.lang = 'en-US';
-  recognition.onresult = function(e) {
+var micPermissionGranted = false;
+
+function createRecognition() {
+  if (!SpeechRecognition) return null;
+  var r = new SpeechRecognition();
+  r.continuous = true;
+  r.interimResults = true;
+  r.lang = 'en-US';
+  r.onresult = function(e) {
     currentTranscript = Array.from(e.results).map(function(r){return r[0].transcript;}).join('');
     document.getElementById('chat-input').value = currentTranscript;
     updateSendBtn();
   };
-  recognition.onend = function() {
-    isListening = false;
-    document.getElementById('mic-btn').classList.remove('listening');
-    document.getElementById('listening-bar').style.display = 'none';
-    if (currentTranscript.trim()) {
-      setTimeout(function() { sendMessage(currentTranscript.trim()); }, 300);
+  r.onend = function() {
+    if (isListening) {
+      isListening = false;
+      document.getElementById('mic-btn').classList.remove('listening');
+      document.getElementById('listening-bar').style.display = 'none';
+      if (currentTranscript.trim()) {
+        setTimeout(function() { sendMessage(currentTranscript.trim()); }, 300);
+      }
     }
   };
-  recognition.onerror = function(e) {
+  r.onerror = function(e) {
+    if (e.error === 'no-speech') return;
     isListening = false;
+    recognition = null;
     document.getElementById('mic-btn').classList.remove('listening');
     var bar = document.getElementById('listening-bar');
     bar.style.display = 'flex';
-    bar.querySelector('span').textContent = 'Mic error: ' + e.error + '. Check browser permissions.';
+    bar.querySelector('span').textContent = 'Mic error: ' + e.error + '. Tap mic to try again.';
     setTimeout(function() { bar.style.display = 'none'; }, 5000);
     console.error('Recognition error:', e.error);
   };
+  return r;
+}
+
+function startListening() {
+  recognition = createRecognition();
+  if (!recognition) { alert('Speech recognition not available.'); return; }
+  currentTranscript = '';
+  document.getElementById('chat-input').value = '';
+  isListening = true;
+  document.getElementById('mic-btn').classList.add('listening');
+  var bar = document.getElementById('listening-bar');
+  bar.style.display = 'flex';
+  bar.querySelector('span').textContent = 'Listening… tap mic again when done.';
+  try { recognition.start(); } catch(e) {
+    isListening = false;
+    document.getElementById('mic-btn').classList.remove('listening');
+    bar.style.display = 'none';
+    console.error('Recognition start error:', e);
+  }
+}
+
+function stopListening() {
+  isListening = false;
+  document.getElementById('mic-btn').classList.remove('listening');
+  document.getElementById('listening-bar').style.display = 'none';
+  if (recognition) { try { recognition.stop(); } catch(e) {} recognition = null; }
+  if (currentTranscript.trim()) {
+    setTimeout(function() { sendMessage(currentTranscript.trim()); }, 300);
+  }
 }
 
 function toggleMic() {
-  if (!recognition) { alert('Speech recognition not available in this browser.'); return; }
-  if (isListening) {
-    recognition.stop();
-    return;
-  }
+  if (!SpeechRecognition) { alert('Speech recognition not available in this browser.'); return; }
+  if (isListening) { stopListening(); return; }
   stopSpeaking();
-  // Request mic permission explicitly first
+  if (micPermissionGranted) { startListening(); return; }
   navigator.mediaDevices.getUserMedia({audio:true})
   .then(function(stream) {
     stream.getTracks().forEach(function(t){t.stop();});
-    currentTranscript = '';
-    document.getElementById('chat-input').value = '';
-    try { recognition.abort(); } catch(e) {}
-    setTimeout(function() {
-      try {
-        isListening = true;
-        document.getElementById('mic-btn').classList.add('listening');
-        var bar = document.getElementById('listening-bar');
-        bar.style.display = 'flex';
-        bar.querySelector('span').textContent = 'Listening\u2026 speak now';
-        recognition.start();
-      } catch(e) {
-        isListening = false;
-        document.getElementById('mic-btn').classList.remove('listening');
-        document.getElementById('listening-bar').style.display = 'none';
-        console.error('Recognition start error:', e);
-      }
-    }, 150);
+    micPermissionGranted = true;
+    startListening();
   })
   .catch(function(err) {
-    console.error('Mic permission error:', err);
+    console.error('Mic permission denied:', err);
     var bar = document.getElementById('listening-bar');
     bar.style.display = 'flex';
-    bar.querySelector('span').textContent = 'Microphone access denied. Please allow it in Chrome settings.';
+    bar.querySelector('span').textContent = 'Microphone access denied. Please allow it in Chrome site settings.';
     setTimeout(function() { bar.style.display = 'none'; }, 6000);
   });
 }
