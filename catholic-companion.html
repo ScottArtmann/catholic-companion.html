@@ -163,6 +163,7 @@ html,body{height:100%;background:#0d1b2a;font-family:'EB Garamond','Palatino Lin
     <div style="font-size:26px;color:#d4af37;margin-bottom:6px;">&#9881;</div>
     <div style="font-size:20px;font-style:italic;color:#f5e6c8;margin-bottom:22px;">Settings</div>
     <div style="display:flex;flex-direction:column;gap:13px;">
+      <div id="key-status-display" style="background:rgba(0,0,0,.3);border-radius:10px;padding:12px 14px;font-size:12px;color:#9e8c6e;font-family:'Cinzel',serif;letter-spacing:1px;line-height:1.9;text-align:left;"></div>
       <button id="settings-voice-btn" style="background:rgba(212,175,55,.15);border:1px solid #d4af37;border-radius:12px;padding:16px;color:#d4af37;font-size:17px;font-family:'Cinzel',serif;letter-spacing:1px;cursor:pointer;">&#127908; Choose Voice</button>
       <button id="settings-key-btn" style="background:rgba(212,175,55,.08);border:1px solid rgba(212,175,55,.4);border-radius:12px;padding:16px;color:#9e8c6e;font-size:17px;font-family:'Cinzel',serif;letter-spacing:1px;cursor:pointer;">&#128273; Update API Keys</button>
       <button id="settings-close-btn" style="background:transparent;border:1px solid rgba(212,175,55,.25);border-radius:12px;padding:14px;color:#5a4e38;font-size:15px;font-family:'Cinzel',serif;letter-spacing:1px;cursor:pointer;">Close</button>
@@ -194,10 +195,10 @@ html,body{height:100%;background:#0d1b2a;font-family:'EB Garamond','Palatino Lin
     </div>
     <div style="font-size:13px;color:#d4af37;font-family:'Cinzel',serif;letter-spacing:1px;margin-bottom:6px;">ANTHROPIC KEY</div>
     <div style="font-size:12px;color:#9e8c6e;margin-bottom:8px;">console.anthropic.com</div>
-    <input id="key-input" type="password" placeholder="sk-ant-..." style="width:100%;background:rgba(255,255,255,.08);border:1px solid rgba(212,175,55,.4);border-radius:10px;padding:13px 15px;color:#f5e6c8;font-size:15px;outline:none;margin-bottom:18px;"/>
+    <input id="key-input" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="sk-ant-..." style="width:100%;background:rgba(255,255,255,.08);border:1px solid rgba(212,175,55,.4);border-radius:10px;padding:13px 15px;color:#f5e6c8;font-size:15px;outline:none;margin-bottom:18px;letter-spacing:0.5px;"/>
     <div style="font-size:13px;color:#d4af37;font-family:'Cinzel',serif;letter-spacing:1px;margin-bottom:6px;">ELEVENLABS KEY</div>
     <div style="font-size:12px;color:#9e8c6e;margin-bottom:8px;">elevenlabs.io &mdash; free tier is sufficient</div>
-    <input id="el-key-input" type="password" placeholder="ElevenLabs API key..." style="width:100%;background:rgba(255,255,255,.08);border:1px solid rgba(212,175,55,.4);border-radius:10px;padding:13px 15px;color:#f5e6c8;font-size:15px;outline:none;margin-bottom:18px;"/>
+    <input id="el-key-input" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="ElevenLabs API key..." style="width:100%;background:rgba(255,255,255,.08);border:1px solid rgba(212,175,55,.4);border-radius:10px;padding:13px 15px;color:#f5e6c8;font-size:15px;outline:none;margin-bottom:18px;letter-spacing:0.5px;"/>
     <div style="display:flex;gap:12px;justify-content:center;">
       <button id="key-save-btn" style="background:rgba(212,175,55,.75);border:none;border-radius:10px;padding:12px 28px;color:#0d1b2a;font-size:15px;font-family:'Cinzel',serif;letter-spacing:1px;cursor:pointer;">Save Keys</button>
       <button id="key-cancel-btn" style="background:transparent;border:1px solid rgba(212,175,55,.4);border-radius:10px;padding:12px 20px;color:#9e8c6e;font-size:15px;font-family:'Cinzel',serif;letter-spacing:1px;cursor:pointer;">Cancel</button>
@@ -317,6 +318,86 @@ function buildSystem() {
 }
 
 // ── TTS — ELEVENLABS ─────────────────────────────────────────────────────────
+// ── AMBIENT MUSIC ────────────────────────────────────────────────────────────
+// Gregorian chant tone generated via Web Audio API (no external file needed)
+var _musicCtx = null;
+var _musicNodes = [];
+var _musicPlaying = false;
+
+function getMusicCtx() {
+  if (!_musicCtx) {
+    var AC = window.AudioContext || window.webkitAudioContext;
+    if (AC) _musicCtx = new AC();
+  }
+  if (_musicCtx && _musicCtx.state === 'suspended') _musicCtx.resume();
+  return _musicCtx;
+}
+
+function startAmbientMusic() {
+  if (_musicPlaying) return;
+  var ctx = getMusicCtx();
+  if (!ctx) return;
+  _musicPlaying = true;
+  _musicNodes = [];
+
+  // Simple droning choir-like tones (D minor - Dorian mode, evokes chant)
+  var freqs = [146.83, 174.61, 196.00, 220.00, 261.63]; // D3 F3 G3 A3 C4
+  var masterGain = ctx.createGain();
+  masterGain.gain.setValueAtTime(0, ctx.currentTime);
+  masterGain.gain.linearRampToValueAtTime(0.12, ctx.currentTime + 2.0);
+  masterGain.connect(ctx.destination);
+  _musicNodes.push(masterGain);
+
+  freqs.forEach(function(freq, i) {
+    var osc = ctx.createOscillator();
+    var gain = ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(freq, ctx.currentTime);
+    // Slow gentle vibrato
+    var lfo = ctx.createOscillator();
+    var lfoGain = ctx.createGain();
+    lfo.frequency.setValueAtTime(0.3 + i * 0.05, ctx.currentTime);
+    lfoGain.gain.setValueAtTime(0.8, ctx.currentTime);
+    lfo.connect(lfoGain);
+    lfoGain.connect(osc.frequency);
+    lfo.start();
+    gain.gain.setValueAtTime(i === 0 ? 0.5 : 0.25, ctx.currentTime);
+    osc.connect(gain);
+    gain.connect(masterGain);
+    osc.start();
+    _musicNodes.push(osc);
+    _musicNodes.push(lfo);
+    _musicNodes.push(gain);
+    _musicNodes.push(lfoGain);
+  });
+
+  // Slow fading pulse to add life
+  var pulseInterval = setInterval(function() {
+    if (!_musicPlaying) { clearInterval(pulseInterval); return; }
+    if (!masterGain) return;
+    try {
+      var t = ctx.currentTime;
+      masterGain.gain.setValueAtTime(masterGain.gain.value, t);
+      masterGain.gain.linearRampToValueAtTime(0.18, t + 1.5);
+      masterGain.gain.linearRampToValueAtTime(0.08, t + 3.5);
+    } catch(e) {}
+  }, 4000);
+  _musicNodes.push({stop: function(){ clearInterval(pulseInterval); }});
+}
+
+function stopAmbientMusic() {
+  if (!_musicPlaying) return;
+  _musicPlaying = false;
+  var ctx = getMusicCtx();
+  _musicNodes.forEach(function(node) {
+    try {
+      if (node.stop) node.stop();
+      if (node.disconnect) node.disconnect();
+    } catch(e) {}
+  });
+  _musicNodes = [];
+}
+
 function cleanForSpeech(text) {
   var t = text || '';
   var specials = ['\u2726','\u271d','\u2605','\u2600','\u263d','\u273f','\u2022','\u2721'];
@@ -345,22 +426,15 @@ function stopSpeaking() {
   showSpeakingBar(false);
 }
 
-// Show a gold "Hear Father Thomas" button — needed because Chrome blocks autoplay
-// until the user has interacted with the page
+// Auto-speak immediately -- no button needed since AudioContext
+// is already unlocked by the mic tap user gesture
 function showPlayPrompt(text) {
   _promptText = text;
+  // Remove any stale button
   var existing = document.getElementById('play-prompt');
   if (existing) existing.remove();
-  var btn = document.createElement('button');
-  btn.id = 'play-prompt';
-  btn.innerHTML = '&#128266; Hear Father Thomas';
-  btn.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:rgba(212,175,55,.95);border:none;border-radius:24px;padding:15px 30px;color:#0d1b2a;font-size:17px;font-family:Cinzel,serif;letter-spacing:1px;cursor:pointer;z-index:300;box-shadow:0 4px 20px rgba(0,0,0,.5);white-space:nowrap;';
-  btn.addEventListener('click', function() {
-    btn.remove();
-    speakElevenLabs(cleanForSpeech(_promptText), null);
-  });
-  document.body.appendChild(btn);
-  setTimeout(function() { if (btn.parentNode) btn.remove(); }, 15000);
+  // Play directly
+  speakElevenLabs(cleanForSpeech(text), null);
 }
 
 function speakElevenLabs(clean, onEnd) {
@@ -375,13 +449,14 @@ function speakElevenLabs(clean, onEnd) {
   var controller = new AbortController();
   var timer = setTimeout(function() { controller.abort(); }, 20000);
 
+  startAmbientMusic(); // gentle chant while voice is fetching
   fetch('https://api.elevenlabs.io/v1/text-to-speech/' + voiceId, {
     method: 'POST',
     signal: controller.signal,
     headers: {'xi-api-key':key,'Content-Type':'application/json','Accept':'audio/mpeg'},
     body: JSON.stringify({
       text: clean,
-      model_id: 'eleven_multilingual_v2',
+      model_id: 'eleven_turbo_v2_5',
       voice_settings: {stability:0.75, similarity_boost:0.85, style:0.20, use_speaker_boost:true}
     })
   })
@@ -400,6 +475,7 @@ function speakElevenLabs(clean, onEnd) {
       var url = URL.createObjectURL(blob);
       var audio = new Audio(url);
       window._frThomasAudio = audio;
+      stopAmbientMusic();
       isSpeaking = true; showSpeakingBar(true);
       var btn = document.getElementById('play-prompt');
       if (btn) btn.remove();
@@ -437,6 +513,7 @@ function speakElevenLabs(clean, onEnd) {
         isSpeaking = true; showSpeakingBar(true);
         var btn = document.getElementById('play-prompt');
         if (btn) btn.remove();
+        stopAmbientMusic(); // stop chant the moment voice begins
         source.onended = function() {
           isSpeaking = false; showSpeakingBar(false);
           if (onEnd) onEnd();
@@ -508,9 +585,15 @@ function createRecognition() {
 }
 
 function getAudioContext() {
+  // Reuse music context if available, otherwise create new
+  if (_musicCtx && _musicCtx.state !== 'closed') {
+    if (_musicCtx.state === 'suspended') _musicCtx.resume();
+    window._audioCtx = _musicCtx;
+    return _musicCtx;
+  }
   if (!window._audioCtx || window._audioCtx.state === 'closed') {
     var AC = window.AudioContext || window.webkitAudioContext;
-    if (AC) window._audioCtx = new AC();
+    if (AC) { window._audioCtx = new AC(); _musicCtx = window._audioCtx; }
   }
   if (window._audioCtx && window._audioCtx.state === 'suspended') {
     window._audioCtx.resume();
@@ -601,6 +684,7 @@ function showTyping(show) {
     ind.innerHTML = '<div style="display:flex;align-items:center;gap:7px;margin-bottom:4px;"><div class="avatar">&#10013;</div></div><div class="typing-indicator">Father Thomas is composing a response&hellip;</div>';
     document.getElementById('chat-messages').appendChild(ind);
     document.getElementById('chat-messages').scrollTop = 99999;
+    startAmbientMusic(); // gentle chant while Claude thinks
   } else if (!show && ind) {
     ind.remove();
   }
@@ -719,15 +803,32 @@ function buildPrayers() {
 }
 
 // ── SETTINGS ─────────────────────────────────────────────────────────────────
-function showSettings() { document.getElementById('settings-overlay').style.display = 'flex'; }
+function showSettings() {
+  document.getElementById('settings-overlay').style.display = 'flex';
+  var anthKey = getApiKey();
+  var elKey = getElKey();
+  var voiceId = getElVoiceId();
+  var voiceName = 'unknown';
+  for (var i=0; i<EL_VOICES.length; i++) {
+    if (EL_VOICES[i].id === voiceId) { voiceName = EL_VOICES[i].name; break; }
+  }
+  var disp = document.getElementById('key-status-display');
+  disp.innerHTML =
+    'Anthropic key: ' + (anthKey ? '&#10003; saved (' + anthKey.substring(0,8) + '...)' : '&#10007; NOT SET') + '<br>' +
+    'ElevenLabs key: ' + (elKey ? '&#10003; saved (' + elKey.substring(0,8) + '...)' : '&#10007; NOT SET') + '<br>' +
+    'Voice: ' + voiceName;
+}
 function hideSettings() { document.getElementById('settings-overlay').style.display = 'none'; }
 
 function showKeySetup() {
   document.getElementById('key-overlay').style.display = 'flex';
   var a = getApiKey(), el = getElKey();
-  if (a) document.getElementById('key-input').value = a;
-  if (el) document.getElementById('el-key-input').value = el;
-  document.getElementById('key-status').textContent = '';
+  // Show masked version so user can confirm key is present without exposing it
+  document.getElementById('key-input').value = a ? a.substring(0,12) + '...' + a.slice(-4) : '';
+  document.getElementById('key-input').dataset.full = a;
+  document.getElementById('el-key-input').value = el ? el.substring(0,8) + '...' + el.slice(-4) : '';
+  document.getElementById('el-key-input').dataset.full = el;
+  document.getElementById('key-status').textContent = a || el ? 'Keys are saved. Clear a field and retype to update it.' : '';
 }
 function hideKeySetup() { document.getElementById('key-overlay').style.display = 'none'; }
 
@@ -754,9 +855,13 @@ function showVoicePicker() {
         fetch('https://api.elevenlabs.io/v1/text-to-speech/' + v.id, {
           method:'POST',
           headers:{'xi-api-key':elKey,'Content-Type':'application/json','Accept':'audio/mpeg'},
-          body:JSON.stringify({text:'Peace be with you, dear friend. I am Father Thomas.', model_id:'eleven_multilingual_v2', voice_settings:{stability:0.75,similarity_boost:0.85,style:0.20,use_speaker_boost:true}})
+          body:JSON.stringify({text:'Peace be with you, dear friend. I am Father Thomas.', model_id:'eleven_turbo_v2_5', voice_settings:{stability:0.75,similarity_boost:0.85,style:0.20,use_speaker_boost:true}})
         })
-        .then(function(r){ if(!r.ok) throw new Error(r.status); return r.blob(); })
+        .then(function(r){
+          console.log('EL preview response status:', r.status, r.statusText);
+          if(!r.ok) throw new Error('HTTP ' + r.status + ' ' + r.statusText);
+          return r.blob();
+        })
         .then(function(blob){
           var url = URL.createObjectURL(blob);
           var audio = new Audio(url);
@@ -764,7 +869,10 @@ function showVoicePicker() {
           audio.onended = function() { URL.revokeObjectURL(url); document.getElementById('voice-status').textContent = 'Tap Save Choice to use this voice.'; };
           audio.play().catch(function(){ document.getElementById('voice-status').textContent = 'Preview ready. Tap Save to select.'; });
         })
-        .catch(function(e){ document.getElementById('voice-status').textContent = 'Preview failed. Check ElevenLabs key.'; });
+        .catch(function(e){
+          console.error('Preview fetch error:', e);
+          document.getElementById('voice-status').textContent = 'Preview failed: ' + (e.message || String(e)) + '. Key saved: ' + (elKey ? elKey.substring(0,8)+'...' : 'NONE');
+        });
       });
       list.appendChild(row);
     });
@@ -835,12 +943,24 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // API keys
   document.getElementById('key-save-btn').addEventListener('click', function() {
-    var a = document.getElementById('key-input').value.trim();
-    var el = document.getElementById('el-key-input').value.trim();
+    var aInput = document.getElementById('key-input');
+    var elInput = document.getElementById('el-key-input');
+    var a = aInput.value.trim();
+    var el = elInput.value.trim();
     var msg = '';
-    if (a) { if (!a.startsWith('sk-')) { document.getElementById('key-status').textContent = 'Anthropic key should start with sk-ant-'; return; } saveApiKey(a); msg += 'Anthropic key saved. '; }
-    if (el) { saveElKey(el); msg += 'ElevenLabs key saved.'; }
-    if (!msg) { document.getElementById('key-status').textContent = 'Please enter at least one key.'; return; }
+    // Only save if the value looks like a real key (not our masked placeholder)
+    if (a && !a.includes('...')) {
+      if (!a.startsWith('sk-')) { document.getElementById('key-status').textContent = 'Anthropic key should start with sk-ant-'; return; }
+      saveApiKey(a); msg += 'Anthropic key saved. ';
+    }
+    if (el && !el.includes('...')) {
+      saveElKey(el); msg += 'ElevenLabs key saved.';
+    }
+    if (!msg) {
+      // Nothing new entered -- just close
+      document.getElementById('key-overlay').style.display = 'none';
+      return;
+    }
     document.getElementById('key-status').textContent = msg + ' All set!';
     setTimeout(function() { document.getElementById('key-overlay').style.display='none'; }, 1400);
   });
