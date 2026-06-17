@@ -393,6 +393,7 @@ function speakElevenLabs(clean, onEnd) {
   .then(function(arrayBuffer) {
     // Decode and play via AudioContext -- more reliable than new Audio() on Android
     var AudioContext = window.AudioContext || window.webkitAudioContext;
+    getAudioContext(); // ensure context is unlocked in this user gesture
     if (!AudioContext) {
       // Fallback to blob/Audio element
       var blob = new Blob([arrayBuffer], {type:'audio/mpeg'});
@@ -420,11 +421,8 @@ function speakElevenLabs(clean, onEnd) {
     }
 
     // AudioContext path -- most reliable on Android Chrome
-    if (!window._audioCtx) {
-      window._audioCtx = new AudioContext();
-    }
-    var ctx = window._audioCtx;
-    // Resume context if suspended (required after user gesture on some Android versions)
+    var ctx = getAudioContext();
+    if (!ctx) { if (onEnd) onEnd(); return; }
     var resume = ctx.state === 'suspended' ? ctx.resume() : Promise.resolve();
     resume.then(function() {
       ctx.decodeAudioData(arrayBuffer, function(buffer) {
@@ -509,7 +507,21 @@ function createRecognition() {
   return r;
 }
 
+function getAudioContext() {
+  if (!window._audioCtx || window._audioCtx.state === 'closed') {
+    var AC = window.AudioContext || window.webkitAudioContext;
+    if (AC) window._audioCtx = new AC();
+  }
+  if (window._audioCtx && window._audioCtx.state === 'suspended') {
+    window._audioCtx.resume();
+  }
+  return window._audioCtx || null;
+}
+
 function startListening() {
+  // Initialise (and unlock) AudioContext here inside a user gesture
+  getAudioContext();
+
   recognition = createRecognition();
   if (!recognition) { alert('Speech recognition not available.'); return; }
   currentTranscript = '';
@@ -519,11 +531,17 @@ function startListening() {
   var bar = document.getElementById('listening-bar');
   bar.style.display = 'flex';
   bar.querySelector('span').textContent = 'Listening… tap mic again when done.';
-  try { recognition.start(); } catch(e) {
+  try {
+    recognition.start();
+  } catch(e) {
     isListening = false;
     document.getElementById('mic-btn').classList.remove('listening');
     bar.style.display = 'none';
-    console.error('Recognition start error:', e);
+    // Show the actual error so we can diagnose
+    bar.style.display = 'flex';
+    bar.querySelector('span').textContent = 'Could not start mic: ' + e.message + '. Tap to retry.';
+    setTimeout(function() { bar.style.display = 'none'; }, 6000);
+    console.error('Recognition start error:', e.name, e.message);
   }
 }
 
